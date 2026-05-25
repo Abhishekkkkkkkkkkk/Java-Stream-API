@@ -1,43 +1,43 @@
 <!-- SECTION 4: INTERMEDIATE OPERATIONS -->
-    <div class="sec" id="s4">
-      <div class="sh">
-        <div class="sn">4</div>
-        <div class="sh-t">
-          <h2>Intermediate Operations</h2>
-          <p>Filtering, Mapping, Slicing, Sorting — every operation in depth</p>
-        </div>
-      </div>
+<div class="sec" id="s4">
+  <div class="sh">
+    <div class="sn">4</div>
+    <div class="sh-t">
+      <h2>Intermediate Operations</h2>
+      <p>Filtering, Mapping, Slicing, Sorting — every operation in depth</p>
+    </div>
+  </div>
 
-      <!-- filter() -->
-      <div class="mc">
-        <div class="mch">
-          <span class="mn">filter(Predicate&lt;T&gt; predicate)</span
-          ><span class="mb bi2">Stateless · Lazy</span>
+  <!-- filter() -->
+  <div class="mc">
+    <div class="mch">
+      <span class="mn">filter(Predicate&lt;T&gt; predicate)</span
+      ><span class="mb bi2">Stateless · Lazy</span>
+    </div>
+    <div class="mcb">
+      <div class="mm">
+        <div class="mm-i">
+          <label>Returns</label><span>Stream&lt;T&gt;</span>
         </div>
-        <div class="mcb">
-          <div class="mm">
-            <div class="mm-i">
-              <label>Returns</label><span>Stream&lt;T&gt;</span>
-            </div>
-            <div class="mm-i">
-              <label>Parameter</label><span>Predicate&lt;T&gt;</span>
-            </div>
-            <div class="mm-i"><label>Complexity</label><span>O(n)</span></div>
-            <div class="mm-i"><label>Short-circuit</label><span>No</span></div>
+        <div class="mm-i">
+          <label>Parameter</label><span>Predicate&lt;T&gt;</span>
+        </div>
+        <div class="mm-i"><label>Complexity</label><span>O(n)</span></div>
+        <div class="mm-i"><label>Short-circuit</label><span>No</span></div>
+      </div>
+      <p>
+        <strong>Returns</strong> a stream containing only elements that match
+        the given predicate.
+      </p>
+      <div class="cb">
+        <div class="ch">
+          <div class="dots">
+            <span class="dr"></span><span class="dy"></span
+            ><span class="dg"></span>
           </div>
-          <p>
-            <strong>Returns</strong> a stream containing only elements that
-            match the given predicate.
-          </p>
-          <div class="cb">
-            <div class="ch">
-              <div class="dots">
-                <span class="dr"></span><span class="dy"></span
-                ><span class="dg"></span>
-              </div>
-              <span class="cl">Java — filter()</span>
-            </div>
-            <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; nums = <span class="cs">Arrays</span>.<span class="mt">asList</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>,<span class="nm">6</span>);
+          <span class="cl">Java — filter()</span>
+        </div>
+        <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; nums = <span class="cs">Arrays</span>.<span class="mt">asList</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>,<span class="nm">6</span>);
 
 <span class="cm">// Basic filter</span>
 <span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; evens = nums.<span class="mt">stream</span>()
@@ -61,52 +61,52 @@ users.<span class="mt">stream</span>()
     .<span class="mt">filter</span>(<span class="cs">User</span>::isPremium)
     .<span class="mt">filter</span>(u -&gt; u.getAge() &gt;= <span class="nm">18</span>)
     .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());</pre>
-          </div>
-          <div class="box biq">
-            <div class="bi">🎯</div>
-            <div class="bc">
-              <h4>Interview Tip</h4>
-              <p>
-                Chaining multiple <code>filter()</code> calls is semantically
-                equivalent to <code>Predicate.and()</code>, but chaining is more
-                readable. JVM fuses them into a single pass. Always place the
-                most selective (fewest matches) filter first.
-              </p>
-            </div>
-          </div>
+      </div>
+      <div class="box biq">
+        <div class="bi">🎯</div>
+        <div class="bc">
+          <h4>Interview Tip</h4>
+          <p>
+            Chaining multiple <code>filter()</code> calls is semantically
+            equivalent to <code>Predicate.and()</code>, but chaining is more
+            readable. JVM fuses them into a single pass. Always place the most
+            selective (fewest matches) filter first.
+          </p>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- map() -->
-      <div class="mc">
-        <div class="mch">
-          <span class="mn">map(Function&lt;T, R&gt; mapper)</span
-          ><span class="mb bi2">Stateless · Lazy</span>
+  <!-- map() -->
+  <div class="mc">
+    <div class="mch">
+      <span class="mn">map(Function&lt;T, R&gt; mapper)</span
+      ><span class="mb bi2">Stateless · Lazy</span>
+    </div>
+    <div class="mcb">
+      <div class="mm">
+        <div class="mm-i">
+          <label>Returns</label><span>Stream&lt;R&gt;</span>
         </div>
-        <div class="mcb">
-          <div class="mm">
-            <div class="mm-i">
-              <label>Returns</label><span>Stream&lt;R&gt;</span>
-            </div>
-            <div class="mm-i">
-              <label>Parameter</label><span>Function&lt;T,R&gt;</span>
-            </div>
-            <div class="mm-i"><label>Complexity</label><span>O(n)</span></div>
-            <div class="mm-i"><label>Short-circuit</label><span>No</span></div>
+        <div class="mm-i">
+          <label>Parameter</label><span>Function&lt;T,R&gt;</span>
+        </div>
+        <div class="mm-i"><label>Complexity</label><span>O(n)</span></div>
+        <div class="mm-i"><label>Short-circuit</label><span>No</span></div>
+      </div>
+      <p>
+        <strong>Transforms</strong> each element from type T to type R using the
+        mapping function. One-to-one transformation.
+      </p>
+      <div class="cb">
+        <div class="ch">
+          <div class="dots">
+            <span class="dr"></span><span class="dy"></span
+            ><span class="dg"></span>
           </div>
-          <p>
-            <strong>Transforms</strong> each element from type T to type R using
-            the mapping function. One-to-one transformation.
-          </p>
-          <div class="cb">
-            <div class="ch">
-              <div class="dots">
-                <span class="dr"></span><span class="dy"></span
-                ><span class="dg"></span>
-              </div>
-              <span class="cl">Java — map()</span>
-            </div>
-            <pre><span class="cm">// String to length</span>
+          <span class="cl">Java — map()</span>
+        </div>
+        <pre><span class="cm">// String to length</span>
 <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"Java"</span>,<span class="st">"Stream"</span>,<span class="st">"API"</span>)
     .<span class="mt">map</span>(<span class="cs">String</span>::length)
     .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>()); <span class="cm">// [4, 6, 3]</span>
@@ -122,43 +122,40 @@ users.<span class="mt">stream</span>()
 
 <span class="cm">// mapToInt, mapToLong, mapToDouble — avoid boxing</span>
 <span class="kw">int</span> totalLen = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"Java"</span>,<span class="st">"Streams"</span>).<span class="mt">mapToInt</span>(<span class="cs">String</span>::length).<span class="mt">sum</span>(); <span class="cm">// 11</span></pre>
-          </div>
-        </div>
       </div>
+    </div>
+  </div>
 
-      <!-- flatMap() -->
-      <div class="mc">
-        <div class="mch">
-          <span class="mn"
-            >flatMap(Function&lt;T, Stream&lt;R&gt;&gt; mapper)</span
-          ><span class="mb bi2">Stateless · Lazy</span>
+  <!-- flatMap() -->
+  <div class="mc">
+    <div class="mch">
+      <span class="mn">flatMap(Function&lt;T, Stream&lt;R&gt;&gt; mapper)</span
+      ><span class="mb bi2">Stateless · Lazy</span>
+    </div>
+    <div class="mcb">
+      <div class="mm">
+        <div class="mm-i">
+          <label>Returns</label><span>Stream&lt;R&gt;</span>
         </div>
-        <div class="mcb">
-          <div class="mm">
-            <div class="mm-i">
-              <label>Returns</label><span>Stream&lt;R&gt;</span>
-            </div>
-            <div class="mm-i">
-              <label>Parameter</label
-              ><span>Function&lt;T,Stream&lt;R&gt;&gt;</span>
-            </div>
-            <div class="mm-i"><label>Complexity</label><span>O(n×m)</span></div>
-            <div class="mm-i"><label>Short-circuit</label><span>No</span></div>
+        <div class="mm-i">
+          <label>Parameter</label><span>Function&lt;T,Stream&lt;R&gt;&gt;</span>
+        </div>
+        <div class="mm-i"><label>Complexity</label><span>O(n×m)</span></div>
+        <div class="mm-i"><label>Short-circuit</label><span>No</span></div>
+      </div>
+      <p>
+        <strong>Maps + Flattens</strong> — maps each element to a stream, then
+        flattens all those streams into one. Key for nested collections.
+      </p>
+      <div class="cb">
+        <div class="ch">
+          <div class="dots">
+            <span class="dr"></span><span class="dy"></span
+            ><span class="dg"></span>
           </div>
-          <p>
-            <strong>Maps + Flattens</strong> — maps each element to a stream,
-            then flattens all those streams into one. Key for nested
-            collections.
-          </p>
-          <div class="cb">
-            <div class="ch">
-              <div class="dots">
-                <span class="dr"></span><span class="dy"></span
-                ><span class="dg"></span>
-              </div>
-              <span class="cl">Java — flatMap()</span>
-            </div>
-            <pre><span class="cm">// Flatten nested list — the classic flatMap use case</span>
+          <span class="cl">Java — flatMap()</span>
+        </div>
+        <pre><span class="cm">// Flatten nested list — the classic flatMap use case</span>
 <span class="cs">List</span>&lt;<span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt;&gt; nested = <span class="cs">Arrays</span>.<span class="mt">asList</span>(
     <span class="cs">Arrays</span>.<span class="mt">asList</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>),
     <span class="cs">Arrays</span>.<span class="mt">asList</span>(<span class="nm">4</span>,<span class="nm">5</span>),
@@ -179,36 +176,36 @@ users.<span class="mt">stream</span>()
     .<span class="mt">flatMap</span>(p -&gt; p.getHobbies().<span class="mt">stream</span>())
     .<span class="mt">distinct</span>()
     .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());</pre>
-          </div>
-          <div class="box bn">
-            <div class="bi">💡</div>
-            <div class="bc">
-              <h4>map() vs flatMap()</h4>
-              <p>
-                <code>map()</code> → one element in, one element out. If mapping
-                function returns a Stream, you get
-                <code>Stream&lt;Stream&lt;T&gt;&gt;</code>.<br /><code
-                  >flatMap()</code
-                >
-                → one element in, zero or more elements out. Flattens nested
-                streams automatically.
-              </p>
-            </div>
-          </div>
+      </div>
+      <div class="box bn">
+        <div class="bi">💡</div>
+        <div class="bc">
+          <h4>map() vs flatMap()</h4>
+          <p>
+            <code>map()</code> → one element in, one element out. If mapping
+            function returns a Stream, you get
+            <code>Stream&lt;Stream&lt;T&gt;&gt;</code>.<br /><code
+              >flatMap()</code
+            >
+            → one element in, zero or more elements out. Flattens nested streams
+            automatically.
+          </p>
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="sub">
-        <h3>distinct(), sorted(), limit(), skip()</h3>
-        <div class="cb">
-          <div class="ch">
-            <div class="dots">
-              <span class="dr"></span><span class="dy"></span
-              ><span class="dg"></span>
-            </div>
-            <span class="cl">Java — Slicing &amp; Sorting</span>
-          </div>
-          <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; nums = <span class="cs">Arrays</span>.<span class="mt">asList</span>(<span class="nm">5</span>,<span class="nm">3</span>,<span class="nm">1</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">2</span>,<span class="nm">5</span>);
+  <div class="sub">
+    <h3>distinct(), sorted(), limit(), skip()</h3>
+    <div class="cb">
+      <div class="ch">
+        <div class="dots">
+          <span class="dr"></span><span class="dy"></span
+          ><span class="dg"></span>
+        </div>
+        <span class="cl">Java — Slicing &amp; Sorting</span>
+      </div>
+      <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; nums = <span class="cs">Arrays</span>.<span class="mt">asList</span>(<span class="nm">5</span>,<span class="nm">3</span>,<span class="nm">1</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">2</span>,<span class="nm">5</span>);
 
 <span class="cm">// distinct() — removes duplicates using equals()</span>
 nums.<span class="mt">stream</span>().<span class="mt">distinct</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>()); <span class="cm">// [5,3,1,4,2]</span>
@@ -232,20 +229,20 @@ nums.<span class="mt">stream</span>().<span class="mt">skip</span>(<span class="
 <span class="cm">// Pagination: page 2, pageSize 3</span>
 <span class="kw">int</span> page=<span class="nm">2</span>, size=<span class="nm">3</span>;
 nums.<span class="mt">stream</span>().<span class="mt">skip</span>((<span class="kw">long</span>)(page-<span class="nm">1</span>)*size).<span class="mt">limit</span>(size).<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());</pre>
-        </div>
-      </div>
+    </div>
+  </div>
 
-      <div class="sub">
-        <h3>takeWhile() &amp; dropWhile() — Java 9+</h3>
-        <div class="cb">
-          <div class="ch">
-            <div class="dots">
-              <span class="dr"></span><span class="dy"></span
-              ><span class="dg"></span>
-            </div>
-            <span class="cl">Java 9+</span>
-          </div>
-          <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; ordered = <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>,<span class="nm">1</span>,<span class="nm">2</span>);
+  <div class="sub">
+    <h3>takeWhile() &amp; dropWhile() — Java 9+</h3>
+    <div class="cb">
+      <div class="ch">
+        <div class="dots">
+          <span class="dr"></span><span class="dy"></span
+          ><span class="dg"></span>
+        </div>
+        <span class="cl">Java 9+</span>
+      </div>
+      <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; ordered = <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>,<span class="nm">1</span>,<span class="nm">2</span>);
 
 <span class="cm">// takeWhile — take elements WHILE predicate true, stop at first false</span>
 ordered.<span class="mt">stream</span>().<span class="mt">takeWhile</span>(n -&gt; n &lt; <span class="nm">4</span>).<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
@@ -254,58 +251,58 @@ ordered.<span class="mt">stream</span>().<span class="mt">takeWhile</span>(n -&g
 <span class="cm">// dropWhile — drop elements WHILE predicate true, keep rest</span>
 ordered.<span class="mt">stream</span>().<span class="mt">dropWhile</span>(n -&gt; n &lt; <span class="nm">4</span>).<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
 <span class="cm">// [4,5,1,2]</span></pre>
-        </div>
-        <div class="box bw">
-          <div class="bi">⚠️</div>
-          <div class="bc">
-            <h4>Unlike filter()</h4>
-            <p>
-              <code>takeWhile</code>/<code>dropWhile</code> stop at the first
-              failure point — they don't scan the whole stream. Best used on
-              <strong>sorted/ordered</strong> streams.
-            </p>
-          </div>
-        </div>
+    </div>
+    <div class="box bw">
+      <div class="bi">⚠️</div>
+      <div class="bc">
+        <h4>Unlike filter()</h4>
+        <p>
+          <code>takeWhile</code>/<code>dropWhile</code> stop at the first
+          failure point — they don't scan the whole stream. Best used on
+          <strong>sorted/ordered</strong> streams.
+        </p>
       </div>
+    </div>
+  </div>
 
-      <!-- peek() -->
-      <div class="mc">
-        <div class="mch">
-          <span class="mn">peek(Consumer&lt;T&gt; action)</span
-          ><span class="mb bi2">Stateless · Lazy · Debug Only</span>
+  <!-- peek() -->
+  <div class="mc">
+    <div class="mch">
+      <span class="mn">peek(Consumer&lt;T&gt; action)</span
+      ><span class="mb bi2">Stateless · Lazy · Debug Only</span>
+    </div>
+    <div class="mcb">
+      <p>
+        Performs an action on each element <em>without modifying</em> the
+        stream. Use exclusively for debugging pipeline stages.
+      </p>
+      <div class="cb">
+        <div class="ch">
+          <div class="dots">
+            <span class="dr"></span><span class="dy"></span
+            ><span class="dg"></span>
+          </div>
+          <span class="cl">Java — peek() for debugging</span>
         </div>
-        <div class="mcb">
-          <p>
-            Performs an action on each element <em>without modifying</em> the
-            stream. Use exclusively for debugging pipeline stages.
-          </p>
-          <div class="cb">
-            <div class="ch">
-              <div class="dots">
-                <span class="dr"></span><span class="dy"></span
-                ><span class="dg"></span>
-              </div>
-              <span class="cl">Java — peek() for debugging</span>
-            </div>
-            <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; result = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>)
+        <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; result = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>)
     .<span class="mt">peek</span>(n -&gt; <span class="cs">System</span>.out.<span class="mt">print</span>(<span class="st">"pre-filter:"</span>+n+<span class="st">" "</span>))
     .<span class="mt">filter</span>(n -&gt; n % <span class="nm">2</span> == <span class="nm">0</span>)
     .<span class="mt">peek</span>(n -&gt; <span class="cs">System</span>.out.<span class="mt">print</span>(<span class="st">"post-filter:"</span>+n+<span class="st">" "</span>))
     .<span class="mt">map</span>(n -&gt; n * n)
     .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
 <span class="cm">// Output reveals element-by-element lazy execution</span></pre>
-          </div>
-          <div class="box bd2">
-            <div class="bi">🚨</div>
-            <div class="bc">
-              <h4>Never Mutate in peek()</h4>
-              <p>
-                Use <code>peek()</code> for debug logging only. Never modify
-                state inside it — in parallel or optimized pipelines, peek may
-                not be called on all elements.
-              </p>
-            </div>
-          </div>
+      </div>
+      <div class="box bd2">
+        <div class="bi">🚨</div>
+        <div class="bc">
+          <h4>Never Mutate in peek()</h4>
+          <p>
+            Use <code>peek()</code> for debug logging only. Never modify state
+            inside it — in parallel or optimized pipelines, peek may not be
+            called on all elements.
+          </p>
         </div>
       </div>
     </div>
+  </div>
+</div>
