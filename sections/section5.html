@@ -1,34 +1,34 @@
 <!-- SECTION 5: TERMINAL OPERATIONS -->
-    <div class="sec" id="s5">
-      <div class="sh">
-        <div class="sn">5</div>
-        <div class="sh-t">
-          <h2>Terminal Operations</h2>
-          <p>
-            Triggering stream execution — collect, reduce, match, find, and more
-          </p>
-        </div>
-      </div>
+<div class="sec" id="s5">
+  <div class="sh">
+    <div class="sn">5</div>
+    <div class="sh-t">
+      <h2>Terminal Operations</h2>
+      <p>
+        Triggering stream execution — collect, reduce, match, find, and more
+      </p>
+    </div>
+  </div>
 
-      <div class="mc">
-        <div class="mch">
-          <span class="mn">collect(Collector&lt;T, A, R&gt;)</span
-          ><span class="mb bt2">Terminal · Mutable Reduction</span>
+  <div class="mc">
+    <div class="mch">
+      <span class="mn">collect(Collector&lt;T, A, R&gt;)</span
+      ><span class="mb bt2">Terminal · Mutable Reduction</span>
+    </div>
+    <div class="mcb">
+      <p>
+        The most versatile terminal op — performs mutable reduction into a
+        container like List, Set, Map, or String.
+      </p>
+      <div class="cb">
+        <div class="ch">
+          <div class="dots">
+            <span class="dr"></span><span class="dy"></span
+            ><span class="dg"></span>
+          </div>
+          <span class="cl">Java — collect() essentials</span>
         </div>
-        <div class="mcb">
-          <p>
-            The most versatile terminal op — performs mutable reduction into a
-            container like List, Set, Map, or String.
-          </p>
-          <div class="cb">
-            <div class="ch">
-              <div class="dots">
-                <span class="dr"></span><span class="dy"></span
-                ><span class="dg"></span>
-              </div>
-              <span class="cl">Java — collect() essentials</span>
-            </div>
-            <pre><span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; names = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"Alice"</span>,<span class="st">"Bob"</span>,<span class="st">"Carol"</span>);
+        <pre><span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; names = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"Alice"</span>,<span class="st">"Bob"</span>,<span class="st">"Carol"</span>);
 
 <span class="cm">// → List</span>
 <span class="cs">List</span>&lt;<span class="cs">String</span>&gt; list = names.<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
@@ -47,29 +47,29 @@
 <span class="cm">// → Joined String</span>
 <span class="cs">String</span> joined = names.<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">joining</span>(<span class="st">", "</span>,<span class="st">"["</span>,<span class="st">"]"</span>));
 <span class="cm">// [Alice, Bob, Carol]</span></pre>
-          </div>
-        </div>
       </div>
+    </div>
+  </div>
 
-      <div class="mc">
-        <div class="mch">
-          <span class="mn">reduce()</span
-          ><span class="mb bt2">Terminal · Immutable Reduction</span>
+  <div class="mc">
+    <div class="mch">
+      <span class="mn">reduce()</span
+      ><span class="mb bt2">Terminal · Immutable Reduction</span>
+    </div>
+    <div class="mcb">
+      <p>
+        Reduces stream elements into a single value by repeatedly applying a
+        BinaryOperator.
+      </p>
+      <div class="cb">
+        <div class="ch">
+          <div class="dots">
+            <span class="dr"></span><span class="dy"></span
+            ><span class="dg"></span>
+          </div>
+          <span class="cl">Java — reduce() — three overloads</span>
         </div>
-        <div class="mcb">
-          <p>
-            Reduces stream elements into a single value by repeatedly applying a
-            BinaryOperator.
-          </p>
-          <div class="cb">
-            <div class="ch">
-              <div class="dots">
-                <span class="dr"></span><span class="dy"></span
-                ><span class="dg"></span>
-              </div>
-              <span class="cl">Java — reduce() — three overloads</span>
-            </div>
-            <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; nums = <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>);
+        <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; nums = <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>);
 
 <span class="cm">// 1) With identity — always returns T (no Optional needed)</span>
 <span class="kw">int</span> sum = nums.<span class="mt">stream</span>().<span class="mt">reduce</span>(<span class="nm">0</span>, Integer::sum); <span class="cm">// 15</span>
@@ -87,21 +87,21 @@ max.<span class="mt">ifPresent</span>(<span class="cs">System</span>.out::<span 
 
 <span class="cm">// Step-by-step: reduce(0, Integer::sum) on [1,2,3,4,5]</span>
 <span class="cm">// 0+1=1, 1+2=3, 3+3=6, 6+4=10, 10+5=15 ✅</span></pre>
-          </div>
-        </div>
       </div>
+    </div>
+  </div>
 
-      <div class="sub">
-        <h3>Matching &amp; Finding Operations — Short-Circuit</h3>
-        <div class="cb">
-          <div class="ch">
-            <div class="dots">
-              <span class="dr"></span><span class="dy"></span
-              ><span class="dg"></span>
-            </div>
-            <span class="cl">Java — Matching &amp; Finding</span>
-          </div>
-          <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; nums = <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>);
+  <div class="sub">
+    <h3>Matching &amp; Finding Operations — Short-Circuit</h3>
+    <div class="cb">
+      <div class="ch">
+        <div class="dots">
+          <span class="dr"></span><span class="dy"></span
+          ><span class="dg"></span>
+        </div>
+        <span class="cl">Java — Matching &amp; Finding</span>
+      </div>
+      <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; nums = <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>);
 
 <span class="kw">boolean</span> hasEven = nums.<span class="mt">stream</span>().<span class="mt">anyMatch</span>(n -&gt; n%<span class="nm">2</span>==<span class="nm">0</span>);  <span class="cm">// true  (stops at 2)</span>
 <span class="kw">boolean</span> allPos  = nums.<span class="mt">stream</span>().<span class="mt">allMatch</span>(n -&gt; n &gt; <span class="nm">0</span>);    <span class="cm">// true  (scans all)</span>
@@ -116,83 +116,83 @@ max.<span class="mt">ifPresent</span>(<span class="cs">System</span>.out::<span 
 <span class="kw">long</span>   count = nums.<span class="mt">stream</span>().<span class="mt">count</span>();                                  <span class="cm">// 5</span>
 <span class="cs">Optional</span>&lt;<span class="cs">Integer</span>&gt; min = nums.<span class="mt">stream</span>().<span class="mt">min</span>(<span class="cs">Comparator</span>.<span class="mt">naturalOrder</span>()); <span class="cm">// 1</span>
 <span class="cs">Optional</span>&lt;<span class="cs">Integer</span>&gt; max2= nums.<span class="mt">stream</span>().<span class="mt">max</span>(<span class="cs">Comparator</span>.<span class="mt">naturalOrder</span>()); <span class="cm">// 5</span></pre>
-        </div>
+    </div>
 
-        <div class="tw">
-          <table>
-            <thead>
-              <tr>
-                <th>Operation</th>
-                <th>Returns</th>
-                <th>Short-circuits</th>
-                <th>On empty stream</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>anyMatch(pred)</code></td>
-                <td><code>boolean</code></td>
-                <td>✅ On first true</td>
-                <td><code>false</code></td>
-              </tr>
-              <tr>
-                <td><code>allMatch(pred)</code></td>
-                <td><code>boolean</code></td>
-                <td>✅ On first false</td>
-                <td><code>true</code> (vacuous)</td>
-              </tr>
-              <tr>
-                <td><code>noneMatch(pred)</code></td>
-                <td><code>boolean</code></td>
-                <td>✅ On first true</td>
-                <td><code>true</code></td>
-              </tr>
-              <tr>
-                <td><code>findFirst()</code></td>
-                <td><code>Optional&lt;T&gt;</code></td>
-                <td>✅ Immediately</td>
-                <td><code>Optional.empty()</code></td>
-              </tr>
-              <tr>
-                <td><code>findAny()</code></td>
-                <td><code>Optional&lt;T&gt;</code></td>
-                <td>✅ Immediately</td>
-                <td><code>Optional.empty()</code></td>
-              </tr>
-              <tr>
-                <td><code>count()</code></td>
-                <td><code>long</code></td>
-                <td>❌</td>
-                <td><code>0</code></td>
-              </tr>
-              <tr>
-                <td><code>min(comp)</code></td>
-                <td><code>Optional&lt;T&gt;</code></td>
-                <td>❌</td>
-                <td><code>Optional.empty()</code></td>
-              </tr>
-              <tr>
-                <td><code>max(comp)</code></td>
-                <td><code>Optional&lt;T&gt;</code></td>
-                <td>❌</td>
-                <td><code>Optional.empty()</code></td>
-              </tr>
-            </tbody>
-          </table>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th>Operation</th>
+            <th>Returns</th>
+            <th>Short-circuits</th>
+            <th>On empty stream</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>anyMatch(pred)</code></td>
+            <td><code>boolean</code></td>
+            <td>✅ On first true</td>
+            <td><code>false</code></td>
+          </tr>
+          <tr>
+            <td><code>allMatch(pred)</code></td>
+            <td><code>boolean</code></td>
+            <td>✅ On first false</td>
+            <td><code>true</code> (vacuous)</td>
+          </tr>
+          <tr>
+            <td><code>noneMatch(pred)</code></td>
+            <td><code>boolean</code></td>
+            <td>✅ On first true</td>
+            <td><code>true</code></td>
+          </tr>
+          <tr>
+            <td><code>findFirst()</code></td>
+            <td><code>Optional&lt;T&gt;</code></td>
+            <td>✅ Immediately</td>
+            <td><code>Optional.empty()</code></td>
+          </tr>
+          <tr>
+            <td><code>findAny()</code></td>
+            <td><code>Optional&lt;T&gt;</code></td>
+            <td>✅ Immediately</td>
+            <td><code>Optional.empty()</code></td>
+          </tr>
+          <tr>
+            <td><code>count()</code></td>
+            <td><code>long</code></td>
+            <td>❌</td>
+            <td><code>0</code></td>
+          </tr>
+          <tr>
+            <td><code>min(comp)</code></td>
+            <td><code>Optional&lt;T&gt;</code></td>
+            <td>❌</td>
+            <td><code>Optional.empty()</code></td>
+          </tr>
+          <tr>
+            <td><code>max(comp)</code></td>
+            <td><code>Optional&lt;T&gt;</code></td>
+            <td>❌</td>
+            <td><code>Optional.empty()</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>forEach, forEachOrdered, toArray</h3>
+    <div class="cb">
+      <div class="ch">
+        <div class="dots">
+          <span class="dr"></span><span class="dy"></span
+          ><span class="dg"></span>
         </div>
+        <span class="cl">Java</span>
       </div>
-
-      <div class="sub">
-        <h3>forEach, forEachOrdered, toArray</h3>
-        <div class="cb">
-          <div class="ch">
-            <div class="dots">
-              <span class="dr"></span><span class="dy"></span
-              ><span class="dg"></span>
-            </div>
-            <span class="cl">Java</span>
-          </div>
-          <pre><span class="cs">List</span>&lt;<span class="cs">String</span>&gt; items = <span class="cs">List</span>.<span class="mt">of</span>(<span class="st">"A"</span>,<span class="st">"B"</span>,<span class="st">"C"</span>);
+      <pre><span class="cs">List</span>&lt;<span class="cs">String</span>&gt; items = <span class="cs">List</span>.<span class="mt">of</span>(<span class="st">"A"</span>,<span class="st">"B"</span>,<span class="st">"C"</span>);
 
 <span class="cm">// forEach — order not guaranteed in parallel</span>
 items.<span class="mt">parallelStream</span>().<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>); <span class="cm">// A,C,B possible</span>
@@ -205,6 +205,6 @@ items.<span class="mt">parallelStream</span>().<span class="mt">forEachOrdered</
 
 <span class="cm">// Primitive toArray — no boxing!</span>
 <span class="kw">int</span>[] ints = <span class="cs">IntStream</span>.<span class="mt">rangeClosed</span>(<span class="nm">1</span>,<span class="nm">5</span>).<span class="mt">toArray</span>(); <span class="cm">// [1,2,3,4,5]</span></pre>
-        </div>
-      </div>
     </div>
+  </div>
+</div>
