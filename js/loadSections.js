@@ -1,8 +1,8 @@
 async function loadSection(id, file) {
-    const response = await fetch(file);
-    const data = await response.text();
+  const response = await fetch(file);
+  const data = await response.text();
 
-    document.getElementById(id).innerHTML = data;
+  document.getElementById(id).innerHTML = data;
 }
 loadSection("s1", "../sections/section1.html");
 loadSection("s2", "../sections/section2.html");
