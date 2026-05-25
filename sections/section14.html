@@ -1,0 +1,58 @@
+<!-- SECTION 14: MISTAKES -->
+    <div class="sec" id="s14">
+      <div class="sh">
+        <div class="sn">14</div>
+        <div class="sh-t">
+          <h2>Common Mistakes &amp; Pitfalls</h2>
+          <p>The errors that trip up even experienced Java developers</p>
+        </div>
+      </div>
+
+      <div class="cb">
+        <div class="ch">
+          <div class="dots">
+            <span class="dr"></span><span class="dy"></span
+            ><span class="dg"></span>
+          </div>
+          <span class="cl">Java — 8 Critical Mistakes to Avoid</span>
+        </div>
+        <pre><span class="cm">// MISTAKE 1: Reusing a consumed stream → IllegalStateException</span>
+<span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; s = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="st">"b"</span>);
+s.<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>);
+s.<span class="mt">count</span>(); <span class="cm">// ❌ IllegalStateException: stream already operated upon</span>
+<span class="cm">// Fix: use Supplier&lt;Stream&lt;T&gt;&gt; for reusable pipelines</span>
+
+<span class="cm">// MISTAKE 2: Modifying source during streaming → ConcurrentModificationException</span>
+<span class="cs">List</span>&lt;<span class="cs">String</span>&gt; list = <span class="kw">new</span> <span class="cs">ArrayList</span>&lt;&gt;(<span class="cs">Arrays</span>.<span class="mt">asList</span>(<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>));
+list.<span class="mt">stream</span>().<span class="mt">forEach</span>(e -&gt; list.<span class="mt">remove</span>(e)); <span class="cm">// ❌</span>
+<span class="cm">// Fix: collect to new list, then modify original</span>
+
+<span class="cm">// MISTAKE 3: No terminal operation — pipeline never executes</span>
+list.<span class="mt">stream</span>().<span class="mt">filter</span>(e -&gt; e.<span class="mt">startsWith</span>(<span class="st">"a"</span>)).<span class="mt">map</span>(<span class="cs">String</span>::toUpperCase);
+<span class="cm">// ❌ Nothing printed/returned — no terminal op! Add .collect() or .forEach()</span>
+
+<span class="cm">// MISTAKE 4: Using peek() for mutations</span>
+list.<span class="mt">stream</span>().<span class="mt">peek</span>(e -&gt; e.<span class="mt">setActive</span>(<span class="kw">true</span>)).<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+<span class="cm">// ❌ peek is unreliable for side effects — use map() or forEach() instead</span>
+
+<span class="cm">// MISTAKE 5: toMap() with duplicate keys</span>
+<span class="cs">List</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="st">"a"</span>,<span class="st">"b"</span>).<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toMap</span>(<span class="cs">Function</span>.<span class="mt">identity</span>(), <span class="cs">String</span>::length)); <span class="cm">// ❌ ISE</span>
+<span class="cm">// Fix: add merge function (v1, v2) -&gt; v1</span>
+
+<span class="cm">// MISTAKE 6: forEach() to build a collection (race condition in parallel)</span>
+<span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; result = <span class="kw">new</span> <span class="cs">ArrayList</span>&lt;&gt;();
+nums.<span class="mt">parallelStream</span>().<span class="mt">forEach</span>(result::add); <span class="cm">// ❌ NOT thread-safe!</span>
+<span class="cm">// Fix: .collect(Collectors.toList())</span>
+
+<span class="cm">// MISTAKE 7: Infinite stream without limit</span>
+<span class="cs">Stream</span>.<span class="mt">iterate</span>(<span class="nm">0</span>, n-&gt;n+<span class="nm">1</span>).<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>()); <span class="cm">// ❌ Infinite loop! OOM</span>
+<span class="cm">// Fix: add .limit(n) before terminal op</span>
+
+<span class="cm">// MISTAKE 8: NullPointerException from null elements</span>
+<span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="kw">null</span>,<span class="st">"b"</span>).<span class="mt">map</span>(<span class="cs">String</span>::toUpperCase).<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+<span class="cm">// ❌ NPE on null element!</span>
+<span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="kw">null</span>,<span class="st">"b"</span>).<span class="mt">filter</span>(<span class="cs">Objects</span>::nonNull).<span class="mt">map</span>(<span class="cs">String</span>::toUpperCase)
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>()); <span class="cm">// ✅</span></pre>
+      </div>
+    </div>

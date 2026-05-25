@@ -1,0 +1,92 @@
+<!-- SECTION 10: INTERNALS -->
+    <div class="sec" id="s10">
+      <div class="sh">
+        <div class="sn">10</div>
+        <div class="sh-t">
+          <h2>Stream Internals &amp; Architecture</h2>
+          <p>Spliterator, Pipeline, Sink — how the JVM processes streams</p>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Spliterator — The Engine of Stream Splitting</h3>
+        <p>
+          A <strong>Spliterator</strong> (Splittable Iterator) powers both
+          sequential traversal and parallel decomposition. It knows how to split
+          a data source into halves for parallel processing.
+        </p>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java — Spliterator</span>
+          </div>
+          <pre><span class="cs">Spliterator</span>&lt;<span class="cs">String</span>&gt; sp = <span class="cs">List</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>,<span class="st">"d"</span>).<span class="mt">spliterator</span>();
+sp.<span class="mt">estimateSize</span>();     <span class="cm">// 4</span>
+sp.<span class="mt">characteristics</span>(); <span class="cm">// ORDERED | SIZED | SUBSIZED</span>
+
+<span class="cm">// tryAdvance — process one element</span>
+sp.<span class="mt">tryAdvance</span>(<span class="cs">System</span>.out::<span class="mt">println</span>); <span class="cm">// "a"</span>
+
+<span class="cm">// trySplit — split into two halves for parallel</span>
+<span class="cs">Spliterator</span>&lt;<span class="cs">String</span>&gt; half = sp.<span class="mt">trySplit</span>(); <span class="cm">// half has "b", sp has "c","d"</span>
+
+<span class="cm">// Characteristic flags (what the Spliterator guarantees)</span>
+<span class="cm">// ORDERED   — encounter order preserved</span>
+<span class="cm">// DISTINCT  — no duplicate elements</span>
+<span class="cm">// SORTED    — elements in sorted order</span>
+<span class="cm">// SIZED     — exact element count known upfront</span>
+<span class="cm">// NONNULL   — no null elements</span>
+<span class="cm">// IMMUTABLE — source cannot be modified during traversal</span></pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Lazy Execution — How the Pipeline Really Works</h3>
+        <p>
+          Intermediate operations build a
+          <strong>linked chain of stages</strong>. No data flows until the
+          terminal operation "pulls" through this chain element-by-element.
+        </p>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java — Pipeline Execution Trace</span>
+          </div>
+          <pre><span class="cm">// Pipeline: [1..10] → filter(even) → map(×2) → limit(3) → toList</span>
+<span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; result = <span class="cs">IntStream</span>.<span class="mt">rangeClosed</span>(<span class="nm">1</span>,<span class="nm">10</span>)
+    .<span class="mt">filter</span>(n -&gt; n%<span class="nm">2</span>==<span class="nm">0</span>)
+    .<span class="mt">map</span>(n -&gt; n*<span class="nm">2</span>)
+    .<span class="mt">limit</span>(<span class="nm">3</span>)
+    .<span class="mt">boxed</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+<span class="cm">// Output: [4, 8, 12]</span>
+
+<span class="cm">// Internal element-by-element execution:</span>
+<span class="cm">// 1 → filter(1%2≠0) ❌ skip</span>
+<span class="cm">// 2 → filter(2%2=0) ✅ → map(2×2=4)  ✅ → limit(1/3)</span>
+<span class="cm">// 3 → filter(3%2≠0) ❌ skip</span>
+<span class="cm">// 4 → filter(4%2=0) ✅ → map(4×2=8)  ✅ → limit(2/3)</span>
+<span class="cm">// 5 → filter(5%2≠0) ❌ skip</span>
+<span class="cm">// 6 → filter(6%2=0) ✅ → map(6×2=12) ✅ → limit(3/3) STOP!</span>
+<span class="cm">// Elements 7,8,9,10 are NEVER processed — lazy evaluation wins!</span></pre>
+        </div>
+        <div class="box bt">
+          <div class="bi">🔍</div>
+          <div class="bc">
+            <h4>Key Optimization Insight</h4>
+            <p>
+              Place <strong>filter() before map()</strong> to reduce elements
+              for expensive transformations. Place
+              <strong>limit() early</strong> for maximum short-circuiting on
+              infinite or large streams.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>

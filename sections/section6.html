@@ -1,0 +1,200 @@
+<!-- SECTION 6: COLLECTORS -->
+    <div class="sec" id="s6">
+      <div class="sh">
+        <div class="sn">6</div>
+        <div class="sh-t">
+          <h2>Collectors Class — Deep Dive</h2>
+          <p>
+            The most powerful class for stream reduction — grouping,
+            partitioning, joining, and more
+          </p>
+        </div>
+      </div>
+
+      <p>
+        The <code>java.util.stream.Collectors</code> utility class contains
+        factory methods returning <code>Collector</code> implementations. A
+        <code>Collector</code> encapsulates <em>how</em> to accumulate stream
+        elements into a result container via four components:
+        <strong>Supplier</strong>, <strong>Accumulator</strong>,
+        <strong>Combiner</strong>, and <strong>Finisher</strong>.
+      </p>
+
+      <div class="sub">
+        <h3>groupingBy() — The Most Powerful Collector</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java — groupingBy examples</span>
+          </div>
+          <pre><span class="kw">record</span> <span class="cs">Employee</span>(<span class="cs">String</span> name, <span class="cs">String</span> dept, <span class="kw">double</span> salary, <span class="kw">int</span> age) {}
+
+<span class="cs">List</span>&lt;<span class="cs">Employee</span>&gt; employees = <span class="cs">List</span>.<span class="mt">of</span>(
+    <span class="kw">new</span> <span class="cs">Employee</span>(<span class="st">"Alice"</span>,<span class="st">"IT"</span>,     <span class="nm">90000</span>,<span class="nm">30</span>),
+    <span class="kw">new</span> <span class="cs">Employee</span>(<span class="st">"Bob"</span>,  <span class="st">"Finance"</span>,<span class="nm">75000</span>,<span class="nm">35</span>),
+    <span class="kw">new</span> <span class="cs">Employee</span>(<span class="st">"Carol"</span>,<span class="st">"IT"</span>,     <span class="nm">85000</span>,<span class="nm">28</span>),
+    <span class="kw">new</span> <span class="cs">Employee</span>(<span class="st">"Dave"</span>, <span class="st">"Finance"</span>,<span class="nm">95000</span>,<span class="nm">40</span>),
+    <span class="kw">new</span> <span class="cs">Employee</span>(<span class="st">"Eve"</span>,  <span class="st">"HR"</span>,     <span class="nm">60000</span>,<span class="nm">25</span>)
+);
+
+<span class="cm">// 1. Simple grouping → Map&lt;K, List&lt;T&gt;&gt;</span>
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">List</span>&lt;<span class="cs">Employee</span>&gt;&gt; byDept =
+    employees.<span class="mt">stream</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Employee</span>::dept));
+<span class="cm">// {IT=[Alice,Carol], Finance=[Bob,Dave], HR=[Eve]}</span>
+
+<span class="cm">// 2. Grouping + count per group (downstream collector)</span>
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">Long</span>&gt; countByDept = employees.<span class="mt">stream</span>().collect(
+    <span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Employee</span>::dept, <span class="cs">Collectors</span>.<span class="mt">counting</span>()));
+<span class="cm">// {IT=2, Finance=2, HR=1}</span>
+
+<span class="cm">// 3. Grouping + average salary</span>
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">Double</span>&gt; avgSalByDept = employees.<span class="mt">stream</span>().collect(
+    <span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Employee</span>::dept,
+        <span class="cs">Collectors</span>.<span class="mt">averagingDouble</span>(<span class="cs">Employee</span>::salary)));
+<span class="cm">// {IT=87500.0, Finance=85000.0, HR=60000.0}</span>
+
+<span class="cm">// 4. Grouping + map to names only (mapping downstream)</span>
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">List</span>&lt;<span class="cs">String</span>&gt;&gt; namesByDept = employees.<span class="mt">stream</span>().collect(
+    <span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Employee</span>::dept,
+        <span class="cs">Collectors</span>.<span class="mt">mapping</span>(<span class="cs">Employee</span>::name, <span class="cs">Collectors</span>.<span class="mt">toList</span>())));
+<span class="cm">// {IT=[Alice,Carol], Finance=[Bob,Dave], HR=[Eve]}</span>
+
+<span class="cm">// 5. NESTED grouping (multi-level)</span>
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">List</span>&lt;<span class="cs">Employee</span>&gt;&gt;&gt; nested = employees.<span class="mt">stream</span>().collect(
+    <span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Employee</span>::dept,
+        <span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(e -&gt; e.age()&gt;<span class="nm">30</span> ? <span class="st">"Senior"</span> : <span class="st">"Junior"</span>)));
+<span class="cm">// {IT={Junior=[Alice,Carol]}, Finance={Senior=[Bob,Dave]}, ...}</span>
+
+<span class="cm">// 6. Into a sorted Map (TreeMap)</span>
+<span class="cs">TreeMap</span>&lt;<span class="cs">String</span>,<span class="cs">Long</span>&gt; sorted = employees.<span class="mt">stream</span>().collect(
+    <span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Employee</span>::dept, <span class="cs">TreeMap</span>::<span class="kw">new</span>, <span class="cs">Collectors</span>.<span class="mt">counting</span>()));
+
+<span class="cm">// 7. Top earner per department</span>
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">Optional</span>&lt;<span class="cs">Employee</span>&gt;&gt; topEarner = employees.<span class="mt">stream</span>().collect(
+    <span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Employee</span>::dept,
+        <span class="cs">Collectors</span>.<span class="mt">maxBy</span>(<span class="cs">Comparator</span>.<span class="mt">comparingDouble</span>(<span class="cs">Employee</span>::salary))));</pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>partitioningBy()</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cm">// Splits into exactly two groups: true and false</span>
+<span class="cs">Map</span>&lt;<span class="cs">Boolean</span>,<span class="cs">List</span>&lt;<span class="cs">Employee</span>&gt;&gt; partitioned = employees.<span class="mt">stream</span>().collect(
+    <span class="cs">Collectors</span>.<span class="mt">partitioningBy</span>(e -&gt; e.salary() &gt; <span class="nm">80000</span>));
+<span class="cm">// {true=[Alice,Carol,Dave], false=[Bob,Eve]}</span>
+
+<span class="cm">// With downstream collector</span>
+<span class="cs">Map</span>&lt;<span class="cs">Boolean</span>,<span class="cs">Long</span>&gt; counted = employees.<span class="mt">stream</span>().collect(
+    <span class="cs">Collectors</span>.<span class="mt">partitioningBy</span>(e -&gt; e.salary() &gt; <span class="nm">80000</span>, <span class="cs">Collectors</span>.<span class="mt">counting</span>()));
+<span class="cm">// {true=3, false=2}</span></pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>joining()</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cs">List</span>&lt;<span class="cs">String</span>&gt; words = <span class="cs">List</span>.<span class="mt">of</span>(<span class="st">"Java"</span>,<span class="st">"Stream"</span>,<span class="st">"API"</span>);
+
+words.<span class="mt">stream</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">joining</span>());           <span class="cm">// "JavaStreamAPI"</span>
+words.<span class="mt">stream</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">joining</span>(<span class="st">", "</span>));        <span class="cm">// "Java, Stream, API"</span>
+words.<span class="mt">stream</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">joining</span>(<span class="st">", ","["</span>,<span class="st">"]"</span>));  <span class="cm">// "[Java, Stream, API]"</span>
+
+<span class="cm">// Build SQL IN clause</span>
+<span class="cs">String</span> inClause = <span class="cs">List</span>.<span class="mt">of</span>(<span class="st">"'Alice'"</span>,<span class="st">"'Bob'"</span>).<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">joining</span>(<span class="st">","</span>,<span class="st">"("</span>,<span class="st">")"</span>)); <span class="cm">// "('Alice','Bob')"</span></pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Statistics Collectors</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; scores = <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">70</span>,<span class="nm">85</span>,<span class="nm">90</span>,<span class="nm">55</span>,<span class="nm">78</span>);
+
+<span class="kw">long</span>   count = scores.<span class="mt">stream</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">counting</span>());           <span class="cm">// 5</span>
+<span class="kw">int</span>    sum   = scores.<span class="mt">stream</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">summingInt</span>(<span class="cs">Integer</span>::intValue)); <span class="cm">// 378</span>
+<span class="kw">double</span> avg   = scores.<span class="mt">stream</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">averagingInt</span>(<span class="cs">Integer</span>::intValue)); <span class="cm">// 75.6</span>
+
+<span class="cm">// All stats at once!</span>
+<span class="cs">IntSummaryStatistics</span> stats = scores.<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">summarizingInt</span>(<span class="cs">Integer</span>::intValue));
+stats.getCount();   <span class="cm">// 5</span>
+stats.getSum();     <span class="cm">// 378</span>
+stats.getMin();     <span class="cm">// 55</span>
+stats.getMax();     <span class="cm">// 90</span>
+stats.getAverage(); <span class="cm">// 75.6</span></pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>collectingAndThen() — Post-Process After Collecting</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cm">// Collect to list, then make unmodifiable</span>
+<span class="cs">List</span>&lt;<span class="cs">String</span>&gt; immutable = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>).collect(
+    <span class="cs">Collectors</span>.<span class="mt">collectingAndThen</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>(), <span class="cs">Collections</span>::unmodifiableList));
+
+<span class="cm">// Count then convert to descriptive string</span>
+<span class="cs">String</span> msg = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>).collect(
+    <span class="cs">Collectors</span>.<span class="mt">collectingAndThen</span>(<span class="cs">Collectors</span>.<span class="mt">counting</span>(), n -&gt; <span class="st">"Total: "</span>+n));
+<span class="cm">// "Total: 3"</span></pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>toMap() with Merge Function</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cm">// ❌ Throws IllegalStateException on duplicate keys</span>
+<span class="cs">List</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="st">"a"</span>,<span class="st">"b"</span>).<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toMap</span>(<span class="cs">Function</span>.<span class="mt">identity</span>(), <span class="cs">String</span>::length));
+
+<span class="cm">// ✅ Add merge function: keep first value on collision</span>
+<span class="cs">List</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="st">"a"</span>,<span class="st">"b"</span>).<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toMap</span>(
+        <span class="cs">Function</span>.<span class="mt">identity</span>(),
+        <span class="cs">String</span>::length,
+        (v1, v2) -&gt; v1)); <span class="cm">// keep first</span>
+
+<span class="cm">// ✅ Sum lengths on duplicate key</span>
+<span class="cs">List</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="st">"aa"</span>,<span class="st">"b"</span>).<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toMap</span>(s -&gt; s.<span class="mt">charAt</span>(<span class="nm">0</span>), <span class="cs">String</span>::length, Integer::sum));</pre>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,84 @@
+<!-- SECTION 11: COMMON PATTERNS -->
+    <div class="sec" id="s11">
+      <div class="sh">
+        <div class="sn">11</div>
+        <div class="sh-t">
+          <h2>Common Stream Patterns</h2>
+          <p>Real-world recipes you'll use every day in backend development</p>
+        </div>
+      </div>
+
+      <div class="cb">
+        <div class="ch">
+          <div class="dots">
+            <span class="dr"></span><span class="dy"></span
+            ><span class="dg"></span>
+          </div>
+          <span class="cl">Java — Essential Patterns</span>
+        </div>
+        <pre><span class="cm">// ─── PATTERN 1: Frequency Count ───────────────────────────────</span>
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">Long</span>&gt; freq = words.<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Function</span>.<span class="mt">identity</span>(), <span class="cs">Collectors</span>.<span class="mt">counting</span>()));
+
+<span class="cm">// ─── PATTERN 2: Top N by Field ────────────────────────────────</span>
+employees.<span class="mt">stream</span>()
+    .<span class="mt">sorted</span>(<span class="cs">Comparator</span>.<span class="mt">comparingDouble</span>(<span class="cs">Employee</span>::salary).<span class="mt">reversed</span>())
+    .<span class="mt">limit</span>(<span class="nm">3</span>)
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+
+<span class="cm">// ─── PATTERN 3: Second Highest Value ─────────────────────────</span>
+employees.<span class="mt">stream</span>()
+    .<span class="mt">map</span>(<span class="cs">Employee</span>::salary)
+    .<span class="mt">distinct</span>()
+    .<span class="mt">sorted</span>(<span class="cs">Comparator</span>.<span class="mt">reverseOrder</span>())
+    .<span class="mt">skip</span>(<span class="nm">1</span>)
+    .<span class="mt">findFirst</span>()
+    .<span class="mt">orElseThrow</span>();
+
+<span class="cm">// ─── PATTERN 4: Group + Join Names ───────────────────────────</span>
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">String</span>&gt; deptNames = employees.<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Employee</span>::dept,
+        <span class="cs">Collectors</span>.<span class="mt">mapping</span>(<span class="cs">Employee</span>::name, <span class="cs">Collectors</span>.<span class="mt">joining</span>(<span class="st">", "</span>))));
+<span class="cm">// {IT="Alice, Carol", Finance="Bob, Dave", HR="Eve"}</span>
+
+<span class="cm">// ─── PATTERN 5: List → Map (id → object) ─────────────────────</span>
+<span class="cs">Map</span>&lt;<span class="cs">Integer</span>,<span class="cs">Employee</span>&gt; empById = employees.<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toMap</span>(<span class="cs">Employee</span>::id, <span class="cs">Function</span>.<span class="mt">identity</span>()));
+
+<span class="cm">// ─── PATTERN 6: Flatten Nested List ──────────────────────────</span>
+<span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; flat = nested.<span class="mt">stream</span>()
+    .<span class="mt">flatMap</span>(<span class="cs">Collection</span>::stream)
+    .<span class="mt">distinct</span>().<span class="mt">sorted</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+
+<span class="cm">// ─── PATTERN 7: Dedup by Custom Key ──────────────────────────</span>
+employees.<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toMap</span>(<span class="cs">Employee</span>::dept, e -&gt; e, (a,b) -&gt; a))
+    .<span class="mt">values</span>().<span class="mt">stream</span>();
+
+<span class="cm">// ─── PATTERN 8: Pagination ────────────────────────────────────</span>
+<span class="kw">int</span> page=<span class="nm">2</span>, pageSize=<span class="nm">10</span>;
+list.<span class="mt">stream</span>().<span class="mt">skip</span>((<span class="kw">long</span>)(page-<span class="nm">1</span>)*pageSize).<span class="mt">limit</span>(pageSize).<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+
+<span class="cm">// ─── PATTERN 9: Merge Two Streams ────────────────────────────</span>
+<span class="cs">Stream</span>.<span class="mt">concat</span>(stream1, stream2).<span class="mt">distinct</span>().<span class="mt">sorted</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+
+<span class="cm">// ─── PATTERN 10: Partition then Aggregate ────────────────────</span>
+<span class="cs">Map</span>&lt;<span class="cs">Boolean</span>,<span class="cs">DoubleSummaryStatistics</span>&gt; salStats = employees.<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">partitioningBy</span>(e -&gt; e.salary()&gt;<span class="nm">80000</span>,
+        <span class="cs">Collectors</span>.<span class="mt">summarizingDouble</span>(<span class="cs">Employee</span>::salary)));
+
+<span class="cm">// ─── PATTERN 11: Running Total ────────────────────────────────</span>
+<span class="cs">AtomicInteger</span> running = <span class="kw">new</span> <span class="cs">AtomicInteger</span>();
+<span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; cumSum = <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>).<span class="mt">stream</span>()
+    .<span class="mt">map</span>(running::addAndGet).<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+<span class="cm">// [1,3,6,10,15]</span>
+
+<span class="cm">// ─── PATTERN 12: Log Analysis from File ───────────────────────</span>
+<span class="kw">try</span> (<span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; lines = <span class="cs">Files</span>.<span class="mt">lines</span>(<span class="cs">Path</span>.<span class="mt">of</span>(<span class="st">"app.log"</span>))) {
+    <span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">Long</span>&gt; errorCounts = lines
+        .<span class="mt">filter</span>(l -&gt; l.<span class="mt">contains</span>(<span class="st">"ERROR"</span>))
+        .<span class="mt">map</span>(l -&gt; l.<span class="mt">split</span>(<span class="st">" "</span>)[<span class="nm">2</span>])
+        .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Function</span>.<span class="mt">identity</span>(), <span class="cs">Collectors</span>.<span class="mt">counting</span>()));
+}</pre>
+      </div>
+    </div>

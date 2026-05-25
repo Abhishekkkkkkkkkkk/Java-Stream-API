@@ -1,0 +1,89 @@
+<!-- SECTION 12: STREAMS VS LOOPS -->
+    <div class="sec" id="s12">
+      <div class="sh">
+        <div class="sn">12</div>
+        <div class="sh-t">
+          <h2>Streams vs Traditional Loops</h2>
+          <p>An honest comparison — knowing when each wins</p>
+        </div>
+      </div>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>For/While Loops</th>
+              <th>Streams</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Readability</td>
+              <td>Verbose, mechanics visible</td>
+              <td>Declarative, intent is clear</td>
+            </tr>
+            <tr>
+              <td>Performance (small data)</td>
+              <td>⚡ Faster (no overhead)</td>
+              <td>Minor overhead</td>
+            </tr>
+            <tr>
+              <td>Performance (large data)</td>
+              <td>Sequential only</td>
+              <td>⚡ Parallel via <code>parallelStream()</code></td>
+            </tr>
+            <tr>
+              <td>Memory</td>
+              <td>Full control</td>
+              <td>Lazy — processes on demand</td>
+            </tr>
+            <tr>
+              <td>Debugging</td>
+              <td>Easy with breakpoints</td>
+              <td>Harder (use peek() strategically)</td>
+            </tr>
+            <tr>
+              <td>Mutation</td>
+              <td>Easy and explicit</td>
+              <td>Discouraged (side effects)</td>
+            </tr>
+            <tr>
+              <td>Exception handling</td>
+              <td>Normal try-catch</td>
+              <td>Awkward (checked exceptions in lambdas)</td>
+            </tr>
+            <tr>
+              <td>Infinite sequences</td>
+              <td>Manual while loop</td>
+              <td>Native generate()/iterate()</td>
+            </tr>
+            <tr>
+              <td>Composability</td>
+              <td>Low (nested loops)</td>
+              <td>High (method chaining)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="box bt">
+        <div class="bi">💡</div>
+        <div class="bc">
+          <h4>Practical Decision Rule</h4>
+          <ul>
+            <li>
+              <strong>Use Streams</strong> for: data transformation, filtering,
+              grouping, aggregation, collections of collections, or when
+              parallelism might be needed.
+            </li>
+            <li>
+              <strong>Use Loops</strong> for: simple indexed iteration, complex
+              control flow (break/continue with multiple conditions),
+              exception-heavy code, or performance-critical code on tiny
+              collections.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>

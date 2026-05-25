@@ -1,0 +1,70 @@
+<!-- SECTION 16: REAL-WORLD USE CASES -->
+    <div class="sec" id="s16">
+      <div class="sh">
+        <div class="sn">16</div>
+        <div class="sh-t">
+          <h2>Real-World Use Cases</h2>
+          <p>
+            Streams in production — Spring Boot, APIs, data processing,
+            e-commerce
+          </p>
+        </div>
+      </div>
+
+      <div class="cb">
+        <div class="ch">
+          <div class="dots">
+            <span class="dr"></span><span class="dy"></span
+            ><span class="dg"></span>
+          </div>
+          <span class="cl">Java — Production Patterns</span>
+        </div>
+        <pre><span class="cm">// ── E-COMMERCE: Cart Total with Discounts ─────────────────────</span>
+<span class="kw">record</span> <span class="cs">CartItem</span>(<span class="cs">String</span> name, <span class="kw">double</span> price, <span class="kw">int</span> qty, <span class="kw">boolean</span> discounted) {}
+
+<span class="kw">double</span> total = cart.<span class="mt">stream</span>()
+    .<span class="mt">mapToDouble</span>(item -&gt; {
+        <span class="kw">double</span> line = item.price() * item.qty();
+        <span class="kw">return</span> item.discounted() ? line * <span class="nm">0.9</span> : line;
+    }).<span class="mt">sum</span>();
+
+<span class="cm">// ── SPRING BOOT API: Entity → DTO conversion ──────────────────</span>
+<span class="cs">List</span>&lt;<span class="cs">UserDto</span>&gt; dtos = userRepository.<span class="mt">findAll</span>().<span class="mt">stream</span>()
+    .<span class="mt">filter</span>(<span class="cs">User</span>::isActive)
+    .<span class="mt">map</span>(u -&gt; <span class="kw">new</span> <span class="cs">UserDto</span>(u.getId(), u.getName(), u.getEmail()))
+    .<span class="mt">sorted</span>(<span class="cs">Comparator</span>.<span class="mt">comparing</span>(<span class="cs">UserDto</span>::name))
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+
+<span class="cm">// ── REPORTING: Regional sales statistics ──────────────────────</span>
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">DoubleSummaryStatistics</span>&gt; salesReport = orders.<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Order</span>::getRegion,
+        <span class="cs">Collectors</span>.<span class="mt">summarizingDouble</span>(<span class="cs">Order</span>::getAmount)));
+
+<span class="cm">// ── SECURITY: Collect all permissions from roles + direct grants</span>
+<span class="cs">Set</span>&lt;<span class="cs">String</span>&gt; allPermissions = <span class="cs">Stream</span>.<span class="mt">concat</span>(
+    user.<span class="mt">getRoles</span>().<span class="mt">stream</span>().<span class="mt">flatMap</span>(r -&gt; r.<span class="mt">getPermissions</span>().<span class="mt">stream</span>()),
+    user.<span class="mt">getDirectPermissions</span>().<span class="mt">stream</span>())
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toSet</span>());
+
+<span class="cm">// ── ANALYTICS: Top 5 products by revenue ──────────────────────</span>
+<span class="cs">List</span>&lt;<span class="cs">String</span>&gt; top5 = orderLines.<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">OrderLine</span>::productId,
+        <span class="cs">Collectors</span>.<span class="mt">summingDouble</span>(<span class="cs">OrderLine</span>::revenue)))
+    .<span class="mt">entrySet</span>().<span class="mt">stream</span>()
+    .<span class="mt">sorted</span>(<span class="cs">Map.Entry</span>.&lt;<span class="cs">String</span>,<span class="cs">Double</span>&gt;<span class="mt">comparingByValue</span>().<span class="mt">reversed</span>())
+    .<span class="mt">limit</span>(<span class="nm">5</span>).<span class="mt">map</span>(<span class="cs">Map.Entry</span>::getKey).<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+
+<span class="cm">// ── DATABASE: Transform JPA results to response map ───────────</span>
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">List</span>&lt;<span class="cs">ProductDto</span>&gt;&gt; catProducts = productRepo.<span class="mt">findAll</span>().<span class="mt">stream</span>()
+    .<span class="mt">filter</span>(<span class="cs">Product</span>::isAvailable)
+    .<span class="mt">map</span>(p -&gt; <span class="kw">new</span> <span class="cs">ProductDto</span>(p.getId(), p.getName(), p.getPrice()))
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">ProductDto</span>::category));
+
+<span class="cm">// ── VALIDATION: Collect all validation errors ──────────────────</span>
+<span class="cs">List</span>&lt;<span class="cs">String</span>&gt; errors = validators.<span class="mt">stream</span>()
+    .<span class="mt">map</span>(v -&gt; v.<span class="mt">validate</span>(request))
+    .<span class="mt">filter</span>(<span class="cs">ValidationResult</span>::isError)
+    .<span class="mt">map</span>(<span class="cs">ValidationResult</span>::getMessage)
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());</pre>
+      </div>
+    </div>

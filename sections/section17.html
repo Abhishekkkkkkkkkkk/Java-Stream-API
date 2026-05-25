@@ -1,0 +1,450 @@
+<!-- SECTION 17: INTERVIEW Q&A -->
+    <div class="sec" id="s17">
+      <div class="sh">
+        <div class="sn">17</div>
+        <div class="sh-t">
+          <h2>Interview Questions &amp; Answers</h2>
+          <p>
+            Beginner to advanced — with detailed, interview-ready explanations
+          </p>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>🟢 Beginner Questions</h3>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqe">Easy</span
+            ><span class="iqq"
+              >Q1: What is the difference between Stream and Collection?</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              A <strong>Collection</strong> stores data in memory and can be
+              iterated multiple times. A <strong>Stream</strong> is a pipeline
+              for processing data — it does not store data, is lazy (executes
+              only when a terminal operation fires), and can only be traversed
+              once. Collections are eager (data computed upfront); Streams are
+              lazy (computed on demand).
+            </p>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqe">Easy</span
+            ><span class="iqq">Q2: What is lazy evaluation in Streams?</span>
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              Intermediate operations like <code>filter()</code> and
+              <code>map()</code> don't execute when chained — they build a
+              pipeline description. Execution only begins when a terminal
+              operation is called. This enables
+              <strong>short-circuit evaluation</strong> (e.g.,
+              <code>findFirst()</code> stops after finding one match) and avoids
+              processing unnecessary elements, saving significant computation on
+              large datasets.
+            </p>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqe">Easy</span
+            ><span class="iqq"
+              >Q3: Name five terminal operations and five intermediate
+              operations.</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              <strong>Terminal:</strong> <code>collect()</code>,
+              <code>forEach()</code>, <code>reduce()</code>,
+              <code>count()</code>, <code>findFirst()</code>,
+              <code>anyMatch()</code>, <code>min()</code>, <code>max()</code>,
+              <code>toArray()</code>.
+            </p>
+            <p>
+              <strong>Intermediate:</strong> <code>filter()</code>,
+              <code>map()</code>, <code>flatMap()</code>, <code>sorted()</code>,
+              <code>distinct()</code>, <code>limit()</code>,
+              <code>skip()</code>, <code>peek()</code>, <code>mapToInt()</code>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>🟡 Intermediate Questions</h3>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqm">Medium</span
+            ><span class="iqq"
+              >Q4: What is the difference between map() and flatMap()?</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              <code>map()</code> applies a 1-to-1 transformation — one input
+              element produces exactly one output element. If the mapper returns
+              a Stream, you get <code>Stream&lt;Stream&lt;T&gt;&gt;</code> —
+              nested streams.
+            </p>
+            <p>
+              <code>flatMap()</code> applies a 1-to-many transformation and
+              flattens the result. The mapper must return a Stream, and flatMap
+              merges all those sub-streams into one flat stream. Use it to work
+              with nested collections or when each element maps to multiple
+              results.
+            </p>
+            <div class="cb" style="margin-top: 10px">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cs">List</span>&lt;<span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt;&gt; nested = <span class="cs">List</span>.<span class="mt">of</span>(<span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>), <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">3</span>,<span class="nm">4</span>));
+nested.<span class="mt">stream</span>().<span class="mt">map</span>(<span class="cs">Collection</span>::stream);    <span class="cm">// Stream&lt;Stream&lt;Integer&gt;&gt; ❌</span>
+nested.<span class="mt">stream</span>().<span class="mt">flatMap</span>(<span class="cs">Collection</span>::stream); <span class="cm">// Stream&lt;Integer&gt;         ✅</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqm">Medium</span
+            ><span class="iqq"
+              >Q5: What is the difference between findFirst() and
+              findAny()?</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              <code>findFirst()</code> always returns the
+              <strong>first element</strong> in encounter order — deterministic,
+              even in parallel streams. <code>findAny()</code> returns
+              <strong>any element</strong> — non-deterministic, but potentially
+              faster in parallel streams because whichever thread finds an
+              element first can return immediately. In sequential streams, both
+              behave identically.
+            </p>
+            <p>
+              Use <code>findFirst()</code> when order matters; use
+              <code>findAny()</code> in parallel when you just need any result
+              quickly.
+            </p>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqm">Medium</span
+            ><span class="iqq"
+              >Q6: What is the difference between reduce() and collect()?</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              <code>reduce()</code> performs
+              <strong>immutable reduction</strong> — it combines elements into a
+              single value via a BinaryOperator, producing no intermediate
+              mutable containers. Good for numeric aggregation, finding max/min,
+              or string concatenation without needing a container.
+            </p>
+            <p>
+              <code>collect()</code> performs
+              <strong>mutable reduction</strong> — it accumulates elements into
+              a mutable container (ArrayList, HashMap) using a Collector's
+              Supplier + Accumulator + Combiner. It's more efficient for
+              building collections because it avoids creating many intermediate
+              objects as immutable reduce does.
+            </p>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqm">Medium</span
+            ><span class="iqq"
+              >Q7: When would you use orElse() vs orElseGet()?</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              <code>orElse(value)</code> always evaluates the argument — even if
+              the Optional is present. <code>orElseGet(supplier)</code> is lazy
+              — the Supplier is only called if the Optional is empty. Always
+              prefer <code>orElseGet()</code> when the default is expensive to
+              compute (DB query, network call, complex object creation). Use
+              <code>orElse()</code> only for cheap constant defaults like
+              <code>orElse("unknown")</code>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>🔴 Advanced &amp; Tricky Questions</h3>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqh2">Hard</span
+            ><span class="iqq"
+              >Q8: What does allMatch() return on an empty stream and why?</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              <code>allMatch()</code> on an empty stream returns
+              <strong>true</strong> — this is called <em>vacuous truth</em>. The
+              statement "all elements satisfy predicate P" is vacuously true
+              when there are no elements to violate it.
+              <code>allMatch()</code> needs at least one element that returns
+              false to return false — with zero elements, that can never happen.
+              Similarly: <code>noneMatch()</code> on empty = <code>true</code>;
+              <code>anyMatch()</code> on empty = <code>false</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqt">Tricky</span
+            ><span class="iqq">Q9: What does this code print, and why?</span>
+          </div>
+          <div class="iqb">
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java — Predict the output</span>
+              </div>
+              <pre><span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>)
+    .<span class="mt">peek</span>(s -&gt; <span class="cs">System</span>.out.<span class="mt">print</span>(<span class="st">"p1:"</span>+s+<span class="st">" "</span>))
+    .<span class="mt">filter</span>(s -&gt; !s.<span class="mt">equals</span>(<span class="st">"b"</span>))
+    .<span class="mt">peek</span>(s -&gt; <span class="cs">System</span>.out.<span class="mt">print</span>(<span class="st">"p2:"</span>+s+<span class="st">" "</span>))
+    .<span class="mt">count</span>();</pre>
+            </div>
+            <div class="iqal" style="margin-top: 12px">Answer</div>
+            <p>
+              <strong>Output:</strong> <code>p1:a p2:a p1:b p1:c p2:c</code>
+            </p>
+            <p>
+              This reveals the element-by-element lazy execution: "a" passes
+              both peeks; "b" passes p1 then fails filter so p2 is never called;
+              "c" passes both peeks. Elements traverse the full pipeline one at
+              a time, not stage by stage across all elements.
+            </p>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqh2">Hard</span
+            ><span class="iqq"
+              >Q10: Explain the three-argument form of reduce().</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              <code>reduce(identity, accumulator, combiner)</code> — the
+              combiner is only used in <strong>parallel streams</strong> to
+              merge partial results from different threads. This form also
+              allows reduction when the output type differs from the element
+              type.
+            </p>
+            <div class="cb" style="margin-top: 10px">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cm">// Count total characters across all strings (int output, String input)</span>
+<span class="kw">int</span> total = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"hello"</span>,<span class="st">"world"</span>,<span class="st">"java"</span>)
+    .<span class="mt">reduce</span>(<span class="nm">0</span>,
+        (sum, s) -&gt; sum + s.<span class="mt">length</span>(),  <span class="cm">// accumulator: int+String→int</span>
+        Integer::sum);                   <span class="cm">// combiner:    int+int→int (parallel merge)</span>
+<span class="cm">// 14</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqa">Advanced</span
+            ><span class="iqq"
+              >Q11: What is a Collector and how does it work internally?</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              A <code>Collector&lt;T,A,R&gt;</code> is defined by four
+              components:
+            </p>
+            <ul>
+              <li>
+                <strong>Supplier&lt;A&gt;</strong>: Creates a new mutable result
+                container (e.g., <code>ArrayList::new</code>)
+              </li>
+              <li>
+                <strong>BiConsumer&lt;A,T&gt; accumulator</strong>: Adds an
+                element to the container (e.g., <code>List::add</code>)
+              </li>
+              <li>
+                <strong>BinaryOperator&lt;A&gt; combiner</strong>: Merges two
+                containers in parallel (e.g., <code>List::addAll</code>)
+              </li>
+              <li>
+                <strong>Function&lt;A,R&gt; finisher</strong>: Optional final
+                transformation (e.g., wrapping in
+                <code>Collections.unmodifiableList()</code>)
+              </li>
+            </ul>
+            <p>
+              <code>Collectors.toList()</code> implementation:
+              Supplier=<code>ArrayList::new</code>,
+              Accumulator=<code>List::add</code>, Combiner=list1 adds all of
+              list2, Finisher=identity (no transformation).
+            </p>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqa">Advanced</span
+            ><span class="iqq"
+              >Q12: Why should you avoid using parallel streams with stateful
+              operations?</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              Stateful operations like <code>sorted()</code> and
+              <code>distinct()</code> must see ALL elements before producing any
+              output. In parallel streams, each thread processes its chunk
+              independently, but stateful operations require barrier
+              synchronization — all threads must stop and merge their results
+              before proceeding. This:
+            </p>
+            <ul>
+              <li>Eliminates the parallelism benefit for that operation</li>
+              <li>Adds significant synchronization overhead</li>
+              <li>
+                Can cause unpredictable ordering if multiple stateful ops are
+                chained
+              </li>
+            </ul>
+            <p>
+              For sequential streams, stateful operations are perfectly fine.
+              Use them with parallel streams only when you've profiled and
+              confirmed benefit.
+            </p>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqt">Tricky</span
+            ><span class="iqq"
+              >Q13: Can you explain why Stream.of(1, 2, 3).reduce(0,
+              Integer::sum) is different from Stream.of(1, 2,
+              3).reduce(Integer::sum)?</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              The two-argument form <code>reduce(0, Integer::sum)</code> takes
+              an <strong>identity</strong> value and always returns
+              <code>int</code> (type <code>T</code>). Since the identity is
+              provided, there is always a result even on an empty stream
+              (returns identity=0). The one-argument form
+              <code>reduce(Integer::sum)</code> has no identity, so it returns
+              <code>Optional&lt;Integer&gt;</code> — empty Optional if the
+              stream is empty, avoiding the need to define an identity value.
+            </p>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqa">Advanced</span
+            ><span class="iqq"
+              >Q14: How would you handle checked exceptions in stream
+              lambdas?</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              Lambda functions used in streams cannot throw checked exceptions
+              directly because the functional interfaces (<code>Function</code>,
+              <code>Predicate</code> etc.) don't declare checked exceptions.
+              Common solutions:
+            </p>
+            <div class="cb" style="margin-top: 10px">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java — Three approaches</span>
+              </div>
+              <pre><span class="cm">// 1. Wrap in try-catch inside lambda</span>
+stream.<span class="mt">map</span>(s -&gt; { <span class="kw">try</span> { <span class="kw">return</span> process(s); } <span class="kw">catch</span> (<span class="cs">IOException</span> e) { <span class="kw">throw new</span> <span class="cs">RuntimeException</span>(e); }});
+
+<span class="cm">// 2. Utility wrapper method (cleaner)</span>
+<span class="kw">static</span> &lt;T,R&gt; <span class="cs">Function</span>&lt;T,R&gt; wrap(<span class="cs">CheckedFunction</span>&lt;T,R&gt; fn) {
+    <span class="kw">return</span> t -&gt; { <span class="kw">try</span> { <span class="kw">return</span> fn.<span class="mt">apply</span>(t); } <span class="kw">catch</span>(<span class="cs">Exception</span> e) { <span class="kw">throw new</span> <span class="cs">RuntimeException</span>(e); }};
+}
+stream.<span class="mt">map</span>(wrap(this::riskyOperation));
+
+<span class="cm">// 3. Use a library like Vavr or Lombok's @SneakyThrows</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="iq">
+          <div class="iqh">
+            <span class="iql iqt">Tricky</span
+            ><span class="iqq"
+              >Q15: What is the output of
+              Stream.of("a","b","c").parallel().forEachOrdered(System.out::print)?</span
+            >
+          </div>
+          <div class="iqb">
+            <div class="iqal">Answer</div>
+            <p>
+              <strong>Always prints: abc</strong> —
+              <code>forEachOrdered()</code> guarantees encounter order is
+              maintained even in a parallel stream. This is unlike
+              <code>forEach()</code> on a parallel stream which may print in any
+              order (e.g., bac, cab, etc.). The trade-off is that
+              <code>forEachOrdered()</code> reduces parallelism benefit since
+              threads must synchronize to maintain order.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>

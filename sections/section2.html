@@ -1,0 +1,167 @@
+<!-- SECTION 2: STREAM CREATION -->
+    <div class="sec" id="s2">
+      <div class="sh">
+        <div class="sn">2</div>
+        <div class="sh-t">
+          <h2>Stream Creation Methods</h2>
+          <p>
+            Every way to create a stream — with syntax, internals, and when to
+            use each
+          </p>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>1. From Collections</h3>
+        <p>
+          The most common approach — every <code>Collection</code> has
+          <code>stream()</code> and <code>parallelStream()</code>.
+        </p>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cs">List</span>&lt;<span class="cs">String</span>&gt; list = <span class="cs">Arrays</span>.<span class="mt">asList</span>(<span class="st">"Java"</span>, <span class="st">"Python"</span>, <span class="st">"Go"</span>);
+<span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; s1 = list.<span class="mt">stream</span>();          <span class="cm">// sequential</span>
+<span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; s2 = list.<span class="mt">parallelStream</span>();  <span class="cm">// parallel</span>
+
+<span class="cs">Set</span>&lt;<span class="cs">Integer</span>&gt; set = <span class="kw">new</span> <span class="cs">HashSet</span>&lt;&gt;(<span class="cs">Arrays</span>.<span class="mt">asList</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>));
+<span class="cs">Stream</span>&lt;<span class="cs">Integer</span>&gt; s3 = set.<span class="mt">stream</span>(); <span class="cm">// no guaranteed order</span>
+
+<span class="cm">// Stream of Map entries</span>
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">Integer</span>&gt; map = <span class="cs">Map</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="nm">1</span>,<span class="st">"b"</span>,<span class="nm">2</span>);
+map.<span class="mt">entrySet</span>().<span class="mt">stream</span>().<span class="mt">forEach</span>(e -&gt; <span class="cs">System</span>.out.<span class="mt">println</span>(e.getKey()+<span class="st">"="</span>+e.getValue()));</pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>2. Stream.of() &amp; Arrays.stream()</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cm">// Stream.of() — varargs, convenient inline</span>
+<span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; s = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"Hello"</span>, <span class="st">"World"</span>, <span class="st">"Java"</span>);
+<span class="cs">Stream</span>&lt;<span class="cs">Integer</span>&gt; single = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="nm">42</span>);
+
+<span class="cm">// Arrays.stream() — from arrays</span>
+<span class="cs">String</span>[] arr = {<span class="st">"Alice"</span>, <span class="st">"Bob"</span>, <span class="st">"Carol"</span>};
+<span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; from = <span class="cs">Arrays</span>.<span class="mt">stream</span>(arr);
+<span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; part = <span class="cs">Arrays</span>.<span class="mt">stream</span>(arr, <span class="nm">0</span>, <span class="nm">2</span>); <span class="cm">// "Alice","Bob"</span>
+
+<span class="cm">// ⚠️ PITFALL: Stream.of(int[]) creates Stream&lt;int[]&gt;, NOT IntStream!</span>
+<span class="kw">int</span>[] nums = {<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>};
+<span class="cs">Stream</span>&lt;<span class="kw">int</span>[]&gt; wrong = <span class="cs">Stream</span>.<span class="mt">of</span>(nums);    <span class="cm">// ❌ one element</span>
+<span class="cs">IntStream</span>    right = <span class="cs">Arrays</span>.<span class="mt">stream</span>(nums); <span class="cm">// ✅ three ints</span></pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>3. Stream.generate() — Infinite Streams</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cm">// generate() takes a Supplier — produces infinite stream</span>
+<span class="cs">Stream</span>&lt;<span class="cs">Double</span>&gt; randoms = <span class="cs">Stream</span>.<span class="mt">generate</span>(<span class="cs">Math</span>::random).<span class="mt">limit</span>(<span class="nm">5</span>);
+
+<span class="cm">// Constant stream</span>
+<span class="cs">Stream</span>.<span class="mt">generate</span>(() -&gt; <span class="st">"ping"</span>).<span class="mt">limit</span>(<span class="nm">3</span>).<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>);
+<span class="cm">// ping, ping, ping</span>
+
+<span class="cm">// UUID generator</span>
+<span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; uuids = <span class="cs">Stream</span>.<span class="mt">generate</span>(() -&gt; <span class="cs">UUID</span>.<span class="mt">randomUUID</span>().<span class="mt">toString</span>()).<span class="mt">limit</span>(<span class="nm">10</span>);</pre>
+        </div>
+        <div class="box bw">
+          <div class="bi">⚠️</div>
+          <div class="bc">
+            <h4>Always Limit Infinite Streams</h4>
+            <p>
+              <code>Stream.generate()</code> and
+              <code>Stream.iterate()</code> create infinite streams. Always
+              chain <code>.limit(n)</code> or use a short-circuit terminal op
+              like <code>findFirst()</code>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>4. Stream.iterate()</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cm">// Java 8: iterate(seed, UnaryOperator)</span>
+<span class="cs">Stream</span>.<span class="mt">iterate</span>(<span class="nm">0</span>, n -&gt; n + <span class="nm">2</span>).<span class="mt">limit</span>(<span class="nm">5</span>).<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>);
+<span class="cm">// 0, 2, 4, 6, 8</span>
+
+<span class="cm">// Java 9: iterate(seed, Predicate, UnaryOperator) — like a for-loop!</span>
+<span class="cs">Stream</span>.<span class="mt">iterate</span>(<span class="nm">1</span>, n -&gt; n &lt;= <span class="nm">10</span>, n -&gt; n + <span class="nm">1</span>).<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>);
+<span class="cm">// 1, 2, 3, 4, 5, 6, 7, 8, 9, 10</span>
+
+<span class="cm">// Fibonacci using iterate</span>
+<span class="cs">Stream</span>.<span class="mt">iterate</span>(<span class="kw">new</span> <span class="kw">long</span>[]{<span class="nm">0</span>,<span class="nm">1</span>}, f -&gt; <span class="kw">new</span> <span class="kw">long</span>[]{f[<span class="nm">1</span>], f[<span class="nm">0</span>]+f[<span class="nm">1</span>]})
+    .<span class="mt">limit</span>(<span class="nm">10</span>).<span class="mt">map</span>(f -&gt; f[<span class="nm">0</span>]).<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>);
+<span class="cm">// 0, 1, 1, 2, 3, 5, 8, 13, 21, 34</span></pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>5. Streams from Strings &amp; Files</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cm">// Stream of chars from String</span>
+<span class="st">"Hello"</span>.<span class="mt">chars</span>().<span class="mt">mapToObj</span>(c -&gt; (<span class="kw">char</span>)c).<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">print</span>);
+
+<span class="cm">// Stream of words via pattern split</span>
+<span class="cs">Pattern</span>.<span class="mt">compile</span>(<span class="st">"\\s+"</span>).<span class="mt">splitAsStream</span>(<span class="st">"Java Stream API"</span>)
+    .<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>); <span class="cm">// Java, Stream, API</span>
+
+<span class="cm">// Stream lines from file (use try-with-resources!)</span>
+<span class="kw">try</span> (<span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; lines = <span class="cs">Files</span>.<span class="mt">lines</span>(<span class="cs">Path</span>.<span class="mt">of</span>(<span class="st">"data.txt"</span>))) {
+    lines.<span class="mt">filter</span>(l -&gt; !l.<span class="mt">isBlank</span>()).<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>);
+}</pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>6. Primitive Streams</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cs">IntStream</span> range  = <span class="cs">IntStream</span>.<span class="mt">range</span>(<span class="nm">1</span>,<span class="nm">6</span>);       <span class="cm">// 1,2,3,4,5</span>
+<span class="cs">IntStream</span> closed = <span class="cs">IntStream</span>.<span class="mt">rangeClosed</span>(<span class="nm">1</span>,<span class="nm">5</span>); <span class="cm">// 1,2,3,4,5</span>
+<span class="cs">LongStream</span> ls   = <span class="cs">LongStream</span>.<span class="mt">range</span>(<span class="nm">0L</span>, <span class="nm">1_000_000L</span>);
+<span class="cs">DoubleStream</span> ds  = <span class="cs">DoubleStream</span>.<span class="mt">of</span>(<span class="nm">1.1</span>, <span class="nm">2.2</span>, <span class="nm">3.3</span>);
+<span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; empty = <span class="cs">Stream</span>.<span class="mt">empty</span>();         <span class="cm">// safe empty stream</span></pre>
+        </div>
+      </div>
+    </div>

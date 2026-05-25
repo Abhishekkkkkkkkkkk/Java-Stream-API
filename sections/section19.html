@@ -1,0 +1,563 @@
+<!-- SECTION 19: CHEAT SHEET -->
+    <div class="sec" id="s19">
+      <div class="sh">
+        <div class="sn">19</div>
+        <div class="sh-t">
+          <h2>Cheat Sheet &amp; Quick Revision</h2>
+          <p>
+            One-stop reference — all key methods, patterns, and interview tips
+          </p>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Stream Creation Quick Reference</h3>
+        <div class="chg">
+          <div class="chi">
+            <h4>From Collection</h4>
+            <code>list.stream()</code><code>list.parallelStream()</code>
+          </div>
+          <div class="chi">
+            <h4>From Values</h4>
+            <code>Stream.of("a","b","c")</code><code>Stream.empty()</code>
+          </div>
+          <div class="chi">
+            <h4>From Array</h4>
+            <code>Arrays.stream(arr)</code><code>Arrays.stream(arr,0,3)</code>
+          </div>
+          <div class="chi">
+            <h4>Infinite</h4>
+            <code>Stream.generate(supplier)</code
+            ><code>Stream.iterate(seed, fn)</code>
+          </div>
+          <div class="chi">
+            <h4>Int Range</h4>
+            <code>IntStream.range(1, 6)</code
+            ><code>IntStream.rangeClosed(1,5)</code>
+          </div>
+          <div class="chi">
+            <h4>From String</h4>
+            <code>"text".chars()</code
+            ><code>Pattern.compile(" ").splitAsStream(s)</code>
+          </div>
+          <div class="chi">
+            <h4>From File</h4>
+            <code>Files.lines(Path.of("f.txt"))</code>
+          </div>
+          <div class="chi">
+            <h4>Builder</h4>
+            <code>Stream.builder().add("a").build()</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>All Intermediate Operations</h3>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Signature</th>
+                <th>What It Does</th>
+                <th>Stateful?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>filter</code></td>
+                <td><code>Predicate&lt;T&gt;</code></td>
+                <td>Keep elements matching predicate</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><code>map</code></td>
+                <td><code>Function&lt;T,R&gt;</code></td>
+                <td>Transform T → R (1-to-1)</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><code>flatMap</code></td>
+                <td><code>Function&lt;T,Stream&lt;R&gt;&gt;</code></td>
+                <td>Map + flatten nested streams</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><code>mapToInt</code></td>
+                <td><code>ToIntFunction&lt;T&gt;</code></td>
+                <td>T → IntStream (no boxing)</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><code>mapToLong</code></td>
+                <td><code>ToLongFunction&lt;T&gt;</code></td>
+                <td>T → LongStream</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><code>mapToDouble</code></td>
+                <td><code>ToDoubleFunction&lt;T&gt;</code></td>
+                <td>T → DoubleStream</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><code>distinct</code></td>
+                <td>—</td>
+                <td>Remove duplicates (uses equals)</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><code>sorted</code></td>
+                <td><code>Comparator&lt;T&gt;</code> (optional)</td>
+                <td>Sort elements</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><code>limit</code></td>
+                <td><code>long maxSize</code></td>
+                <td>Take first n elements</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><code>skip</code></td>
+                <td><code>long n</code></td>
+                <td>Discard first n elements</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><code>peek</code></td>
+                <td><code>Consumer&lt;T&gt;</code></td>
+                <td>Debug: observe without changing</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><code>takeWhile</code></td>
+                <td><code>Predicate&lt;T&gt;</code></td>
+                <td>Take while predicate true (Java 9+)</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><code>dropWhile</code></td>
+                <td><code>Predicate&lt;T&gt;</code></td>
+                <td>Drop while predicate true (Java 9+)</td>
+                <td>No</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>All Terminal Operations</h3>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Returns</th>
+                <th>Short-circuit</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>forEach</code></td>
+                <td><code>void</code></td>
+                <td>No</td>
+                <td>Side-effect action on each element</td>
+              </tr>
+              <tr>
+                <td><code>forEachOrdered</code></td>
+                <td><code>void</code></td>
+                <td>No</td>
+                <td>forEach respecting encounter order</td>
+              </tr>
+              <tr>
+                <td><code>collect</code></td>
+                <td><code>R</code></td>
+                <td>No</td>
+                <td>Mutable reduction into container</td>
+              </tr>
+              <tr>
+                <td><code>toArray</code></td>
+                <td><code>Object[]</code></td>
+                <td>No</td>
+                <td>Collect to array</td>
+              </tr>
+              <tr>
+                <td><code>reduce</code></td>
+                <td><code>T / Optional&lt;T&gt;</code></td>
+                <td>No</td>
+                <td>Immutable reduction to single value</td>
+              </tr>
+              <tr>
+                <td><code>count</code></td>
+                <td><code>long</code></td>
+                <td>No</td>
+                <td>Number of elements</td>
+              </tr>
+              <tr>
+                <td><code>min</code></td>
+                <td><code>Optional&lt;T&gt;</code></td>
+                <td>No</td>
+                <td>Minimum element by comparator</td>
+              </tr>
+              <tr>
+                <td><code>max</code></td>
+                <td><code>Optional&lt;T&gt;</code></td>
+                <td>No</td>
+                <td>Maximum element by comparator</td>
+              </tr>
+              <tr>
+                <td><code>anyMatch</code></td>
+                <td><code>boolean</code></td>
+                <td>✅ first true</td>
+                <td>Any element matches predicate</td>
+              </tr>
+              <tr>
+                <td><code>allMatch</code></td>
+                <td><code>boolean</code></td>
+                <td>✅ first false</td>
+                <td>All elements match predicate</td>
+              </tr>
+              <tr>
+                <td><code>noneMatch</code></td>
+                <td><code>boolean</code></td>
+                <td>✅ first true</td>
+                <td>No element matches predicate</td>
+              </tr>
+              <tr>
+                <td><code>findFirst</code></td>
+                <td><code>Optional&lt;T&gt;</code></td>
+                <td>✅ immediately</td>
+                <td>First element in encounter order</td>
+              </tr>
+              <tr>
+                <td><code>findAny</code></td>
+                <td><code>Optional&lt;T&gt;</code></td>
+                <td>✅ immediately</td>
+                <td>Any element (faster in parallel)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>All Key Collectors</h3>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th>Collector</th>
+                <th>Returns</th>
+                <th>Common Use</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>toList()</code></td>
+                <td><code>List&lt;T&gt;</code></td>
+                <td>General collection</td>
+              </tr>
+              <tr>
+                <td><code>toSet()</code></td>
+                <td><code>Set&lt;T&gt;</code></td>
+                <td>Unique elements, no order</td>
+              </tr>
+              <tr>
+                <td><code>toMap(kFn, vFn)</code></td>
+                <td><code>Map&lt;K,V&gt;</code></td>
+                <td>Key-value extraction</td>
+              </tr>
+              <tr>
+                <td><code>toUnmodifiableList()</code></td>
+                <td><code>List&lt;T&gt;</code></td>
+                <td>Immutable list (Java 10+)</td>
+              </tr>
+              <tr>
+                <td><code>groupingBy(clf)</code></td>
+                <td><code>Map&lt;K,List&lt;T&gt;&gt;</code></td>
+                <td>Group by a property</td>
+              </tr>
+              <tr>
+                <td><code>groupingBy(clf, downstream)</code></td>
+                <td><code>Map&lt;K,D&gt;</code></td>
+                <td>Group + downstream aggregation</td>
+              </tr>
+              <tr>
+                <td><code>partitioningBy(pred)</code></td>
+                <td><code>Map&lt;Boolean,List&lt;T&gt;&gt;</code></td>
+                <td>Split into true/false buckets</td>
+              </tr>
+              <tr>
+                <td><code>joining(delim,pre,suf)</code></td>
+                <td><code>String</code></td>
+                <td>String concatenation</td>
+              </tr>
+              <tr>
+                <td><code>counting()</code></td>
+                <td><code>Long</code></td>
+                <td>Count elements (as downstream)</td>
+              </tr>
+              <tr>
+                <td><code>summingInt(fn)</code></td>
+                <td><code>Integer</code></td>
+                <td>Sum int-valued property</td>
+              </tr>
+              <tr>
+                <td><code>averagingDouble(fn)</code></td>
+                <td><code>Double</code></td>
+                <td>Average double-valued property</td>
+              </tr>
+              <tr>
+                <td><code>summarizingInt(fn)</code></td>
+                <td><code>IntSummaryStatistics</code></td>
+                <td>count, sum, min, max, avg at once</td>
+              </tr>
+              <tr>
+                <td><code>mapping(fn, downstream)</code></td>
+                <td>varies</td>
+                <td>Transform then collect downstream</td>
+              </tr>
+              <tr>
+                <td><code>collectingAndThen(c, fn)</code></td>
+                <td>varies</td>
+                <td>Collect then apply finisher</td>
+              </tr>
+              <tr>
+                <td><code>minBy(comp)</code></td>
+                <td><code>Optional&lt;T&gt;</code></td>
+                <td>Minimum element (as downstream)</td>
+              </tr>
+              <tr>
+                <td><code>maxBy(comp)</code></td>
+                <td><code>Optional&lt;T&gt;</code></td>
+                <td>Maximum element (as downstream)</td>
+              </tr>
+              <tr>
+                <td><code>reducing(id, fn)</code></td>
+                <td><code>Optional&lt;T&gt;</code></td>
+                <td>Custom reduction (as downstream)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Most-Used Patterns Quick Lookup</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java — Pattern Reference Card</span>
+          </div>
+          <pre><span class="cm">// Filter          → list.stream().filter(pred).toList()</span>
+<span class="cm">// Transform       → list.stream().map(fn).toList()</span>
+<span class="cm">// Flatten         → list.stream().flatMap(Collection::stream).toList()</span>
+<span class="cm">// Distinct+Sort   → list.stream().distinct().sorted().toList()</span>
+<span class="cm">// Top N           → list.stream().sorted(comp.reversed()).limit(N).toList()</span>
+<span class="cm">// Second highest  → list.stream().map(fn).distinct().sorted(rev).skip(1).findFirst()</span>
+<span class="cm">// Sum field       → list.stream().mapToDouble(fn).sum()</span>
+<span class="cm">// Count           → list.stream().filter(pred).count()</span>
+<span class="cm">// Group by        → list.stream().collect(groupingBy(fn))</span>
+<span class="cm">// Group+count     → list.stream().collect(groupingBy(fn, counting()))</span>
+<span class="cm">// Group+avg       → list.stream().collect(groupingBy(fn, averagingDouble(fn2)))</span>
+<span class="cm">// Frequency map   → list.stream().collect(groupingBy(identity(), counting()))</span>
+<span class="cm">// Partition       → list.stream().collect(partitioningBy(pred))</span>
+<span class="cm">// Join strings    → list.stream().map(fn).collect(joining(", ","[","]"))</span>
+<span class="cm">// List → Map      → list.stream().collect(toMap(fn1, identity()))</span>
+<span class="cm">// Pagination      → list.stream().skip((page-1)*size).limit(size).toList()</span>
+<span class="cm">// Merge streams   → Stream.concat(s1, s2).distinct().sorted().toList()</span>
+<span class="cm">// Remove nulls    → list.stream().filter(Objects::nonNull).toList()</span>
+<span class="cm">// Any/All/None    → stream.anyMatch(pred) / allMatch / noneMatch</span>
+<span class="cm">// Statistics      → stream.mapToDouble(fn).summaryStatistics()</span>
+<span class="cm">// Safe null chain → Optional.ofNullable(x).map(fn).orElse("default")</span>
+<span class="cm">// Infinite safe   → Stream.iterate(0, n->n+1).limit(100).toList()</span></pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Functional Interfaces Quick Reference</h3>
+        <div class="chg">
+          <div class="chi">
+            <h4>Predicate&lt;T&gt;</h4>
+            <code>T → boolean</code><code>Used: filter()</code
+            ><code>and(), or(), negate()</code>
+          </div>
+          <div class="chi">
+            <h4>Function&lt;T,R&gt;</h4>
+            <code>T → R</code><code>Used: map(), flatMap()</code
+            ><code>andThen(), compose()</code>
+          </div>
+          <div class="chi">
+            <h4>Consumer&lt;T&gt;</h4>
+            <code>T → void</code><code>Used: forEach(), peek()</code
+            ><code>andThen()</code>
+          </div>
+          <div class="chi">
+            <h4>Supplier&lt;T&gt;</h4>
+            <code>() → T</code><code>Used: generate(), orElseGet()</code>
+          </div>
+          <div class="chi">
+            <h4>BinaryOperator&lt;T&gt;</h4>
+            <code>(T,T) → T</code><code>Used: reduce()</code>
+          </div>
+          <div class="chi">
+            <h4>UnaryOperator&lt;T&gt;</h4>
+            <code>T → T</code><code>Used: iterate(), replaceAll()</code>
+          </div>
+          <div class="chi">
+            <h4>Comparator&lt;T&gt;</h4>
+            <code>(T,T) → int</code><code>Used: sorted(), min(), max()</code
+            ><code>comparing(), reversed()</code>
+          </div>
+          <div class="chi">
+            <h4>BiFunction&lt;T,U,R&gt;</h4>
+            <code>(T,U) → R</code><code>Used: toMap() merge fn</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Optional Methods Quick Reference</h3>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Returns</th>
+                <th>Key Behaviour</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Optional.of(v)</code></td>
+                <td><code>Optional&lt;T&gt;</code></td>
+                <td>NPE if v is null</td>
+              </tr>
+              <tr>
+                <td><code>Optional.ofNullable(v)</code></td>
+                <td><code>Optional&lt;T&gt;</code></td>
+                <td>Empty if v is null ✅</td>
+              </tr>
+              <tr>
+                <td><code>Optional.empty()</code></td>
+                <td><code>Optional&lt;T&gt;</code></td>
+                <td>Explicitly empty</td>
+              </tr>
+              <tr>
+                <td><code>isPresent()</code></td>
+                <td><code>boolean</code></td>
+                <td>True if value exists</td>
+              </tr>
+              <tr>
+                <td><code>isEmpty()</code></td>
+                <td><code>boolean</code></td>
+                <td>True if empty (Java 11+)</td>
+              </tr>
+              <tr>
+                <td><code>get()</code></td>
+                <td><code>T</code></td>
+                <td>⚠️ Throws NoSuchElementException if empty</td>
+              </tr>
+              <tr>
+                <td><code>orElse(default)</code></td>
+                <td><code>T</code></td>
+                <td>Always evaluates default</td>
+              </tr>
+              <tr>
+                <td><code>orElseGet(supplier)</code></td>
+                <td><code>T</code></td>
+                <td>Lazy — evaluates supplier only if empty ✅</td>
+              </tr>
+              <tr>
+                <td><code>orElseThrow(exFn)</code></td>
+                <td><code>T</code></td>
+                <td>Throws if empty</td>
+              </tr>
+              <tr>
+                <td><code>ifPresent(consumer)</code></td>
+                <td><code>void</code></td>
+                <td>Runs consumer if present</td>
+              </tr>
+              <tr>
+                <td><code>map(fn)</code></td>
+                <td><code>Optional&lt;R&gt;</code></td>
+                <td>Transform value if present</td>
+              </tr>
+              <tr>
+                <td><code>flatMap(fn)</code></td>
+                <td><code>Optional&lt;R&gt;</code></td>
+                <td>Avoid Optional&lt;Optional&gt;</td>
+              </tr>
+              <tr>
+                <td><code>filter(pred)</code></td>
+                <td><code>Optional&lt;T&gt;</code></td>
+                <td>Keep value if predicate passes</td>
+              </tr>
+              <tr>
+                <td><code>stream()</code></td>
+                <td><code>Stream&lt;T&gt;</code></td>
+                <td>0 or 1 element stream (Java 9+)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>🎯 Top 10 Interview Must-Know Points</h3>
+        <div class="box biq">
+          <div class="bi">🎯</div>
+          <div class="bc">
+            <h4>Essential Points — Know These Cold</h4>
+            <ul>
+              <li>
+                <strong>Streams are lazy</strong> — intermediate ops don't
+                execute until a terminal op fires.
+              </li>
+              <li>
+                <strong>Streams are single-use</strong> — reusing a consumed
+                stream throws <code>IllegalStateException</code>.
+              </li>
+              <li>
+                <strong>Filter before Map</strong> for performance — reduce
+                elements first before expensive transforms.
+              </li>
+              <li>
+                <strong>collect() vs reduce()</strong> — mutable vs immutable
+                reduction. Use collect for building containers.
+              </li>
+              <li>
+                <strong>findFirst() vs findAny()</strong> — deterministic vs
+                non-deterministic in parallel.
+              </li>
+              <li>
+                <strong>orElse() vs orElseGet()</strong> — eager vs lazy
+                evaluation of defaults. Use orElseGet for expensive defaults.
+              </li>
+              <li>
+                <strong>Parallel streams</strong> use ForkJoinPool. Avoid for
+                small data, I/O, or shared mutable state.
+              </li>
+              <li>
+                <strong>flatMap()</strong> is the key to working with nested
+                structures and Optional chaining.
+              </li>
+              <li>
+                <strong>Primitive streams</strong> (IntStream etc.) avoid boxing
+                — always use for numeric work.
+              </li>
+              <li>
+                <strong>allMatch() on empty stream = true</strong> (vacuous
+                truth) — a classic tricky question.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>

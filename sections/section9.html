@@ -1,0 +1,172 @@
+<!-- SECTION 9: PARALLEL STREAMS -->
+    <div class="sec" id="s9">
+      <div class="sh">
+        <div class="sn">9</div>
+        <div class="sh-t">
+          <h2>Parallel Streams</h2>
+          <p>ForkJoinPool, when to use, and critical thread-safety pitfalls</p>
+        </div>
+      </div>
+
+      <p>
+        A parallel stream splits source data into chunks processed concurrently
+        by multiple threads using the shared
+        <strong>ForkJoinPool.commonPool()</strong>. Results are then merged
+        back. This can dramatically speed up CPU-intensive operations on large
+        datasets.
+      </p>
+
+      <div class="fd">
+        <div
+          style="
+            margin-bottom: 16px;
+            color: var(--mu);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+          "
+        >
+          Parallel Stream — ForkJoin Architecture
+        </div>
+        <div class="fr"><div class="fb fs">Data Source [1…1M]</div></div>
+        <div class="fad">↓ Spliterator divides</div>
+        <div class="fr">
+          <div class="fb fi">Chunk 1<br />[1..250k]</div>
+          <div class="fa">‖</div>
+          <div class="fb fi">Chunk 2<br />[250k..500k]</div>
+          <div class="fa">‖</div>
+          <div class="fb fi">Chunk 3<br />[500k..750k]</div>
+          <div class="fa">‖</div>
+          <div class="fb fi">Chunk 4<br />[750k..1M]</div>
+        </div>
+        <div class="fad">↓ Processed in parallel (ForkJoinPool threads)</div>
+        <div class="fr">
+          <div class="fb ft">Results Merged via Combiner</div>
+        </div>
+        <div class="fad">↓</div>
+        <div class="fr"><div class="fb fres">Final Result</div></div>
+      </div>
+
+      <div class="sub">
+        <h3>Using Parallel Streams</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java — Parallel Stream Usage</span>
+          </div>
+          <pre><span class="cm">// Method 1: parallelStream() directly from collection</span>
+<span class="kw">long</span> sum = nums.<span class="mt">parallelStream</span>().<span class="mt">mapToLong</span>(<span class="cs">Integer</span>::intValue).<span class="mt">sum</span>();
+
+<span class="cm">// Method 2: .parallel() on existing stream</span>
+<span class="cs">Stream</span>&lt;<span class="cs">Integer</span>&gt; parallel = nums.<span class="mt">stream</span>().<span class="mt">parallel</span>();
+
+<span class="cm">// Check / toggle</span>
+parallel.<span class="mt">isParallel</span>();  <span class="cm">// true</span>
+parallel.<span class="mt">sequential</span>(); <span class="cm">// switch back to sequential</span>
+
+<span class="cm">// Custom thread pool size (avoids blocking commonPool)</span>
+<span class="cs">ForkJoinPool</span> customPool = <span class="kw">new</span> <span class="cs">ForkJoinPool</span>(<span class="nm">4</span>);
+customPool.<span class="mt">submit</span>(() -&gt;
+    nums.<span class="mt">parallelStream</span>().<span class="mt">filter</span>(n -&gt; n%<span class="nm">2</span>==<span class="nm">0</span>).<span class="mt">count</span>()
+).<span class="mt">get</span>();</pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>When to Use vs Avoid Parallel Streams</h3>
+        <div class="cg">
+          <div class="cc after">
+            <h4>✅ Good Candidates for Parallel</h4>
+            <ul>
+              <li>Large datasets (100,000+ elements)</li>
+              <li>CPU-intensive, independent computations</li>
+              <li>Stateless, side-effect-free operations</li>
+              <li>Data sources that split well (ArrayList, arrays)</li>
+              <li>No ordering requirement on output</li>
+            </ul>
+          </div>
+          <div class="cc before">
+            <h4>❌ Bad Candidates for Parallel</h4>
+            <ul>
+              <li>Small datasets — overhead exceeds benefit</li>
+              <li>I/O-bound operations (DB calls, file reads)</li>
+              <li>Stateful operations requiring synchronization</li>
+              <li>LinkedList (hard to split efficiently)</li>
+              <li>Operations touching shared mutable state</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Thread Safety — Race Conditions</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java — Thread Safety Examples</span>
+          </div>
+          <pre><span class="cm">// ❌ WRONG — ArrayList is NOT thread-safe</span>
+<span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; result = <span class="kw">new</span> <span class="cs">ArrayList</span>&lt;&gt;();
+<span class="cs">IntStream</span>.<span class="mt">range</span>(<span class="nm">0</span>,<span class="nm">1000</span>).<span class="mt">parallel</span>().<span class="mt">forEach</span>(result::add);
+<span class="cm">// result.size() may be &lt; 1000 — race condition!</span>
+
+<span class="cm">// ✅ CORRECT 1 — use collect() (always thread-safe)</span>
+<span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; safe = <span class="cs">IntStream</span>.<span class="mt">range</span>(<span class="nm">0</span>,<span class="nm">1000</span>)
+    .<span class="mt">parallel</span>().<span class="mt">boxed</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+
+<span class="cm">// ✅ CORRECT 2 — stateless operations are always safe</span>
+<span class="kw">long</span> count = <span class="cs">IntStream</span>.<span class="mt">range</span>(<span class="nm">0</span>,<span class="nm">1000</span>)
+    .<span class="mt">parallel</span>().<span class="mt">filter</span>(n -&gt; n%<span class="nm">2</span>==<span class="nm">0</span>).<span class="mt">count</span>(); <span class="cm">// always 500 ✅</span>
+
+<span class="cm">// ✅ CORRECT 3 — thread-safe accumulation with AtomicLong</span>
+<span class="cs">AtomicLong</span> atomicSum = <span class="kw">new</span> <span class="cs">AtomicLong</span>(<span class="nm">0</span>);
+<span class="cs">IntStream</span>.<span class="mt">range</span>(<span class="nm">0</span>,<span class="nm">1000</span>).<span class="mt">parallel</span>().<span class="mt">forEach</span>(atomicSum::addAndGet);</pre>
+        </div>
+      </div>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>Sequential</th>
+              <th>Parallel</th>
+              <th>Winner</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>100-item list, simple filter</td>
+              <td>~0.01ms</td>
+              <td>~1ms (thread overhead)</td>
+              <td>Sequential ✅</td>
+            </tr>
+            <tr>
+              <td>10M elements, CPU-heavy op</td>
+              <td>~500ms</td>
+              <td>~80ms (8-core)</td>
+              <td>Parallel ✅</td>
+            </tr>
+            <tr>
+              <td>I/O operations</td>
+              <td>Efficient</td>
+              <td>Threads block, starve</td>
+              <td>Sequential ✅</td>
+            </tr>
+            <tr>
+              <td>sorted() on large data</td>
+              <td>Predictable</td>
+              <td>Sync overhead</td>
+              <td>Depends on size</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>

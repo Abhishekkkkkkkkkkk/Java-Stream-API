@@ -1,0 +1,55 @@
+<!-- SECTION 13: PERFORMANCE -->
+    <div class="sec" id="s13">
+      <div class="sh">
+        <div class="sn">13</div>
+        <div class="sh-t">
+          <h2>Performance Considerations</h2>
+          <p>
+            Boxing costs, lazy evaluation, memory implications, and tuning tips
+          </p>
+        </div>
+      </div>
+
+      <div class="cb">
+        <div class="ch">
+          <div class="dots">
+            <span class="dr"></span><span class="dy"></span
+            ><span class="dg"></span>
+          </div>
+          <span class="cl"
+            >Java — Performance Anti-patterns vs Optimizations</span
+          >
+        </div>
+        <pre><span class="cm">// ❌ ANTI-PATTERN 1: Boxing on large numeric work</span>
+<span class="kw">long</span> sum1 = <span class="cs">Stream</span>.<span class="mt">iterate</span>(<span class="nm">1</span>, n-&gt;n+<span class="nm">1</span>).<span class="mt">limit</span>(<span class="nm">10_000_000</span>)
+    .<span class="mt">mapToLong</span>(<span class="cs">Integer</span>::longValue).<span class="mt">sum</span>(); <span class="cm">// boxes each int!</span>
+
+<span class="cm">// ✅ OPTIMIZATION 1: Use primitive stream — up to 8x faster</span>
+<span class="kw">long</span> sum2 = <span class="cs">LongStream</span>.<span class="mt">rangeClosed</span>(<span class="nm">1</span>, <span class="nm">10_000_000</span>).<span class="mt">sum</span>();
+
+<span class="cm">// ❌ ANTI-PATTERN 2: map() before filter() — wastes work</span>
+list.<span class="mt">stream</span>()
+    .<span class="mt">map</span>(<span class="cs">Employee</span>::getName)         <span class="cm">// runs on ALL 1000 employees</span>
+    .<span class="mt">filter</span>(n -&gt; n.<span class="mt">startsWith</span>(<span class="st">"A"</span>)) <span class="cm">// then filters</span>
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+
+<span class="cm">// ✅ OPTIMIZATION 2: filter() before map()</span>
+list.<span class="mt">stream</span>()
+    .<span class="mt">filter</span>(e -&gt; e.<span class="mt">getName</span>().<span class="mt">startsWith</span>(<span class="st">"A"</span>)) <span class="cm">// narrows first</span>
+    .<span class="mt">map</span>(<span class="cs">Employee</span>::getName)                   <span class="cm">// map runs on fewer</span>
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+
+<span class="cm">// ❌ ANTI-PATTERN 3: sorted() on unbounded stream</span>
+<span class="cs">Stream</span>.<span class="mt">generate</span>(<span class="cs">Math</span>::random).<span class="mt">sorted</span>().<span class="mt">findFirst</span>(); <span class="cm">// ❌ hangs forever!</span>
+
+<span class="cm">// ✅ OPTIMIZATION 3: limit() before sorted()</span>
+<span class="cs">Stream</span>.<span class="mt">generate</span>(<span class="cs">Math</span>::random).<span class="mt">limit</span>(<span class="nm">1000</span>).<span class="mt">sorted</span>().<span class="mt">findFirst</span>();
+
+<span class="cm">// ❌ ANTI-PATTERN 4: parallel on tiny lists</span>
+<span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>).<span class="mt">parallelStream</span>().<span class="mt">map</span>(n-&gt;n*<span class="nm">2</span>).<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+<span class="cm">// Thread overhead >> computation time</span>
+
+<span class="cm">// ✅ OPTIMIZATION 4: parallel only for large CPU-heavy work</span>
+largeList.<span class="mt">parallelStream</span>().<span class="mt">map</span>(this::expensiveTransform).<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());</pre>
+      </div>
+    </div>

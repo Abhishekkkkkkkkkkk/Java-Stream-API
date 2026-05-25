@@ -1,0 +1,149 @@
+<!-- SECTION 7: OPTIONAL -->
+    <div class="sec" id="s7">
+      <div class="sh">
+        <div class="sn">7</div>
+        <div class="sh-t">
+          <h2>Optional Class with Streams</h2>
+          <p>
+            Eliminating NullPointerException — safely handling absent values
+          </p>
+        </div>
+      </div>
+
+      <p>
+        <code>Optional&lt;T&gt;</code> is a container that may or may not hold a
+        non-null value. Introduced in Java 8 to make null-safety explicit in the
+        type system and eliminate the infamous
+        <strong>NullPointerException</strong>.
+      </p>
+
+      <div class="sub">
+        <h3>Creating Optional Instances</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java — Creating Optionals</span>
+          </div>
+          <pre><span class="cm">// Optional.of() — throws NullPointerException if value is null</span>
+<span class="cs">Optional</span>&lt;<span class="cs">String</span>&gt; present = <span class="cs">Optional</span>.<span class="mt">of</span>(<span class="st">"Java"</span>);       <span class="cm">// ✅</span>
+<span class="cs">Optional</span>&lt;<span class="cs">String</span>&gt; danger  = <span class="cs">Optional</span>.<span class="mt">of</span>(<span class="kw">null</span>);         <span class="cm">// ❌ NPE!</span>
+
+<span class="cm">// Optional.ofNullable() — safe for potentially null values</span>
+<span class="cs">Optional</span>&lt;<span class="cs">String</span>&gt; safe1 = <span class="cs">Optional</span>.<span class="mt">ofNullable</span>(<span class="st">"Java"</span>); <span class="cm">// present</span>
+<span class="cs">Optional</span>&lt;<span class="cs">String</span>&gt; safe2 = <span class="cs">Optional</span>.<span class="mt">ofNullable</span>(<span class="kw">null</span>);  <span class="cm">// empty</span>
+
+<span class="cm">// Optional.empty() — explicitly empty</span>
+<span class="cs">Optional</span>&lt;<span class="cs">String</span>&gt; empty = <span class="cs">Optional</span>.<span class="mt">empty</span>();</pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Using Optional — All Key Methods</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java — Optional API</span>
+          </div>
+          <pre><span class="cs">Optional</span>&lt;<span class="cs">String</span>&gt; opt = <span class="cs">Optional</span>.<span class="mt">of</span>(<span class="st">"Hello Java"</span>);
+
+<span class="cm">// Presence checks</span>
+opt.<span class="mt">isPresent</span>(); <span class="cm">// true</span>
+opt.<span class="mt">isEmpty</span>();   <span class="cm">// false (Java 11+)</span>
+
+<span class="cm">// Execute only if present</span>
+opt.<span class="mt">ifPresent</span>(v -&gt; <span class="cs">System</span>.out.<span class="mt">println</span>(<span class="st">"Value: "</span>+v));
+
+<span class="cm">// ifPresentOrElse (Java 9+)</span>
+opt.<span class="mt">ifPresentOrElse</span>(
+    v -&gt; <span class="cs">System</span>.out.<span class="mt">println</span>(<span class="st">"Found: "</span>+v),
+    () -&gt; <span class="cs">System</span>.out.<span class="mt">println</span>(<span class="st">"Not found"</span>));
+
+<span class="cm">// orElse — default (ALWAYS evaluated, even if value present!)</span>
+<span class="cs">String</span> v1 = opt.<span class="mt">orElse</span>(<span class="st">"default"</span>); <span class="cm">// "Hello Java"</span>
+
+<span class="cm">// orElseGet — lazy default (only evaluated if empty) ✅ prefer this!</span>
+<span class="cs">String</span> v2 = opt.<span class="mt">orElseGet</span>(() -&gt; <span class="mt">computeExpensiveDefault</span>());
+
+<span class="cm">// orElseThrow — throw exception if absent</span>
+<span class="cs">String</span> v3 = opt.<span class="mt">orElseThrow</span>(() -&gt; <span class="kw">new</span> <span class="cs">RuntimeException</span>(<span class="st">"Not found"</span>));
+
+<span class="cm">// map — transform value if present</span>
+<span class="cs">Optional</span>&lt;<span class="cs">Integer</span>&gt; len = opt.<span class="mt">map</span>(<span class="cs">String</span>::length); <span class="cm">// Optional[10]</span>
+
+<span class="cm">// filter — keep value only if condition met</span>
+<span class="cs">Optional</span>&lt;<span class="cs">String</span>&gt; filtered = opt.<span class="mt">filter</span>(s -&gt; s.<span class="mt">startsWith</span>(<span class="st">"H"</span>));
+
+<span class="cm">// flatMap — avoids Optional&lt;Optional&lt;T&gt;&gt;</span>
+<span class="cs">Optional</span>&lt;<span class="cs">String</span>&gt; upper = opt.<span class="mt">flatMap</span>(s -&gt; <span class="cs">Optional</span>.<span class="mt">of</span>(s.<span class="mt">toUpperCase</span>()));
+
+<span class="cm">// Chaining Optionals (avoid nested NPE checks)</span>
+<span class="cs">String</span> city = <span class="cs">Optional</span>.<span class="mt">ofNullable</span>(user)
+    .<span class="mt">map</span>(<span class="cs">User</span>::getAddress)
+    .<span class="mt">map</span>(<span class="cs">Address</span>::getCity)
+    .<span class="mt">orElse</span>(<span class="st">"Unknown"</span>);</pre>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Optional with Streams (Java 9+)</h3>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java</span>
+          </div>
+          <pre><span class="cs">List</span>&lt;<span class="cs">Optional</span>&lt;<span class="cs">String</span>&gt;&gt; opts = <span class="cs">List</span>.<span class="mt">of</span>(
+    <span class="cs">Optional</span>.<span class="mt">of</span>(<span class="st">"a"</span>), <span class="cs">Optional</span>.<span class="mt">empty</span>(), <span class="cs">Optional</span>.<span class="mt">of</span>(<span class="st">"b"</span>), <span class="cs">Optional</span>.<span class="mt">empty</span>());
+
+<span class="cm">// Optional.stream() (Java 9) — filter out empties cleanly</span>
+<span class="cs">List</span>&lt;<span class="cs">String</span>&gt; present = opts.<span class="mt">stream</span>()
+    .<span class="mt">flatMap</span>(<span class="cs">Optional</span>::stream)  <span class="cm">// removes empties automatically</span>
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+<span class="cm">// ["a", "b"]</span>
+
+<span class="cm">// Before Java 9 (verbose)</span>
+opts.<span class="mt">stream</span>()
+    .<span class="mt">filter</span>(<span class="cs">Optional</span>::isPresent)
+    .<span class="mt">map</span>(<span class="cs">Optional</span>::get)
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());</pre>
+        </div>
+      </div>
+
+      <div class="box bb">
+        <div class="bi">⭐</div>
+        <div class="bc">
+          <h4>Optional Best Practices</h4>
+          <ul>
+            <li>
+              Use <code>orElseGet()</code> over <code>orElse()</code> for
+              expensive defaults — <code>orElse()</code> always evaluates the
+              argument.
+            </li>
+            <li>
+              Never call <code>Optional.get()</code> without checking first —
+              use <code>orElseThrow()</code> for clarity.
+            </li>
+            <li>
+              Don't use Optional as a method parameter — only as a return type.
+            </li>
+            <li>
+              Don't use Optional for collection return types — return an empty
+              collection instead.
+            </li>
+            <li>
+              Don't use Optional for primitive types — use
+              <code>OptionalInt</code>, <code>OptionalLong</code>,
+              <code>OptionalDouble</code>.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,346 @@
+<!-- SECTION 1: INTRODUCTION -->
+    <div class="sec" id="s1">
+      <div class="sh">
+        <div class="sn">1</div>
+        <div class="sh-t">
+          <h2>Introduction to Java Streams API</h2>
+          <p>What streams are, why they exist, and the concepts behind them</p>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>What is the Stream API?</h3>
+        <p>
+          Introduced in <strong>Java 8 (2014)</strong>, the Stream API is a
+          powerful abstraction for processing sequences of data in a
+          <strong>declarative, functional, and pipeline-based</strong> manner. A
+          <em>stream</em> is not a data structure — it is a
+          <strong>view of data</strong> that allows you to express complex
+          data-processing queries compactly and clearly.
+        </p>
+        <p>
+          Think of a stream like a <strong>conveyor belt in a factory</strong>:
+          raw materials (data) enter one end, pass through processing stations
+          (operations), and finished products (results) exit the other end. The
+          belt itself doesn't store anything.
+        </p>
+        <div class="box bn">
+          <div class="bi">💡</div>
+          <div class="bc">
+            <h4>Core Definition</h4>
+            <p>
+              A Stream is a pipeline of operations applied lazily to a data
+              source. It does <strong>NOT</strong> store data. Once consumed, it
+              cannot be reused.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Problems Before Java 8 — Why Streams Were Needed</h3>
+        <div class="cg">
+          <div class="cc before">
+            <h4>❌ Java 7 — Imperative</h4>
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java 7</span>
+              </div>
+              <pre><span class="cm">// Get names of employees earning &gt;50k, sorted</span>
+<span class="cs">List</span>&lt;<span class="cs">String</span>&gt; names = <span class="kw">new</span> <span class="cs">ArrayList</span>&lt;&gt;();
+<span class="kw">for</span> (<span class="cs">Employee</span> e : employees) {
+    <span class="kw">if</span> (e.getSalary() &gt; <span class="nm">50000</span>) {
+        names.add(e.getName());
+    }
+}
+<span class="cs">Collections</span>.<span class="mt">sort</span>(names);
+<span class="cm">// Verbose, mutable, hard to parallelize</span></pre>
+            </div>
+          </div>
+          <div class="cc after">
+            <h4>✅ Java 8 — Declarative</h4>
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java 8+</span>
+              </div>
+              <pre><span class="cm">// Same result — clean and expressive</span>
+<span class="cs">List</span>&lt;<span class="cs">String</span>&gt; names = employees.<span class="mt">stream</span>()
+    .<span class="mt">filter</span>(e -&gt; e.getSalary() &gt; <span class="nm">50000</span>)
+    .<span class="mt">map</span>(<span class="cs">Employee</span>::getName)
+    .<span class="mt">sorted</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+<span class="cm">// One chain, immutable, parallelizable!</span></pre>
+            </div>
+          </div>
+        </div>
+        <h4>Problems Streams Solve:</h4>
+        <ul>
+          <li>
+            <strong>Boilerplate loops</strong> — for-each loops are verbose and
+            error-prone
+          </li>
+          <li>
+            <strong>Difficult parallelism</strong> — manual threading is
+            complex; streams make it trivial
+          </li>
+          <li>
+            <strong>No composability</strong> — operations couldn't be easily
+            chained
+          </li>
+          <li>
+            <strong>No lazy evaluation</strong> — all elements processed even if
+            few are needed
+          </li>
+          <li>
+            <strong>Poor readability</strong> — business logic buried in loop
+            mechanics
+          </li>
+        </ul>
+      </div>
+
+      <div class="sub">
+        <h3>Declarative vs Imperative Programming</h3>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th>Aspect</th>
+                <th>Imperative (How)</th>
+                <th>Declarative (What)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Focus</td>
+                <td>Step-by-step instructions</td>
+                <td>Desired result</td>
+              </tr>
+              <tr>
+                <td>Style</td>
+                <td>for loops, if statements</td>
+                <td>filter, map, reduce</td>
+              </tr>
+              <tr>
+                <td>Mutation</td>
+                <td>Modifies state</td>
+                <td>Produces new values</td>
+              </tr>
+              <tr>
+                <td>Parallelism</td>
+                <td>Complex, manual</td>
+                <td>Trivial (<code>parallelStream()</code>)</td>
+              </tr>
+              <tr>
+                <td>Readability</td>
+                <td>Lower — mechanics visible</td>
+                <td>Higher — intent visible</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Lazy Evaluation — The Superpower of Streams</h3>
+        <p>
+          Intermediate operations are <strong>lazy</strong> — they build a
+          pipeline description but don't execute until a terminal operation
+          fires. This enables short-circuit optimizations.
+        </p>
+        <div class="cb">
+          <div class="ch">
+            <div class="dots">
+              <span class="dr"></span><span class="dy"></span
+              ><span class="dg"></span>
+            </div>
+            <span class="cl">Java — Lazy Evaluation Demo</span>
+          </div>
+          <pre><span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; numbers = <span class="cs">Arrays</span>.<span class="mt">asList</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>,<span class="nm">6</span>,<span class="nm">7</span>,<span class="nm">8</span>,<span class="nm">9</span>,<span class="nm">10</span>);
+
+<span class="cm">// filter and map are lazy — nothing happens yet!</span>
+<span class="cs">Stream</span>&lt;<span class="cs">Integer</span>&gt; pipeline = numbers.<span class="mt">stream</span>()
+    .<span class="mt">filter</span>(n -&gt; { <span class="cs">System</span>.out.<span class="mt">println</span>(<span class="st">"Filtering: "</span>+n); <span class="kw">return</span> n%<span class="nm">2</span>==<span class="nm">0</span>; })
+    .<span class="mt">map</span>(n    -&gt; { <span class="cs">System</span>.out.<span class="mt">println</span>(<span class="st">"Mapping: "</span>+n);   <span class="kw">return</span> n*n; });
+
+<span class="cm">// findFirst() triggers execution — stops at first match!</span>
+<span class="cs">Optional</span>&lt;<span class="cs">Integer</span>&gt; first = pipeline.<span class="mt">findFirst</span>();
+
+<span class="cm">// Output (only 3 lines — not 10!):</span>
+<span class="cm">// Filtering: 1</span>
+<span class="cm">// Filtering: 2  ← passes filter</span>
+<span class="cm">// Mapping: 2    ← short-circuit stops here!</span></pre>
+        </div>
+        <div class="box bt">
+          <div class="bi">🚀</div>
+          <div class="bc">
+            <h4>Lazy Evaluation Benefit</h4>
+            <p>
+              With 10 million elements, <code>findFirst()</code> may only
+              examine 1 or 2 — saving enormous computation.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Collection vs Stream — Key Differences</h3>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Collection</th>
+                <th>Stream</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Purpose</td>
+                <td>Stores &amp; manages data</td>
+                <td>Processes &amp; transforms data</td>
+              </tr>
+              <tr>
+                <td>Data Storage</td>
+                <td>Holds data in memory</td>
+                <td>Does NOT store data</td>
+              </tr>
+              <tr>
+                <td>Reuse</td>
+                <td>Multiple iterations</td>
+                <td>Single-use only</td>
+              </tr>
+              <tr>
+                <td>Evaluation</td>
+                <td>Eager (computed upfront)</td>
+                <td>Lazy (computed on demand)</td>
+              </tr>
+              <tr>
+                <td>Size</td>
+                <td>Always finite</td>
+                <td>Can be infinite</td>
+              </tr>
+              <tr>
+                <td>Parallelism</td>
+                <td>Manual</td>
+                <td>Built-in via <code>parallelStream()</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Stream Pipeline Architecture</h3>
+        <div class="fd">
+          <div
+            style="
+              margin-bottom: 16px;
+              color: var(--mu);
+              font-size: 0.85rem;
+              text-transform: uppercase;
+              letter-spacing: 0.1em;
+              font-weight: 700;
+            "
+          >
+            Stream Pipeline Flow
+          </div>
+          <div class="fr">
+            <div class="fb fs">
+              📦 Source<br /><small>Collection / Array / I/O</small>
+            </div>
+          </div>
+          <div class="fad">↓</div>
+          <div class="fr">
+            <div class="fb fi">filter()<br /><small>Lazy</small></div>
+            <div class="fa">→</div>
+            <div class="fb fi">map()<br /><small>Lazy</small></div>
+            <div class="fa">→</div>
+            <div class="fb fi">sorted()<br /><small>Lazy</small></div>
+            <div class="fa">→</div>
+            <div class="fb fi">limit()<br /><small>Lazy</small></div>
+          </div>
+          <div class="fad">↓</div>
+          <div class="fr">
+            <div class="fb ft">
+              🎯 Terminal Op<br /><small
+                >collect() / reduce() / forEach()</small
+              >
+            </div>
+          </div>
+          <div class="fad">↓</div>
+          <div class="fr">
+            <div class="fb fres">
+              ✅ Result<br /><small>List / Map / Value / Side Effect</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Functional Interfaces Used in Streams</h3>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th>Interface</th>
+                <th>Method</th>
+                <th>Used In</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Predicate&lt;T&gt;</code></td>
+                <td><code>test(T)</code></td>
+                <td><code>filter()</code></td>
+                <td>Returns boolean — tests a condition</td>
+              </tr>
+              <tr>
+                <td><code>Function&lt;T,R&gt;</code></td>
+                <td><code>apply(T)</code></td>
+                <td><code>map()</code></td>
+                <td>Transforms T → R</td>
+              </tr>
+              <tr>
+                <td><code>Consumer&lt;T&gt;</code></td>
+                <td><code>accept(T)</code></td>
+                <td><code>forEach()</code></td>
+                <td>Consumes T, no return</td>
+              </tr>
+              <tr>
+                <td><code>Supplier&lt;T&gt;</code></td>
+                <td><code>get()</code></td>
+                <td><code>generate()</code></td>
+                <td>Supplies values with no input</td>
+              </tr>
+              <tr>
+                <td><code>BinaryOperator&lt;T&gt;</code></td>
+                <td><code>apply(T,T)</code></td>
+                <td><code>reduce()</code></td>
+                <td>Combines two T into one T</td>
+              </tr>
+              <tr>
+                <td><code>Comparator&lt;T&gt;</code></td>
+                <td><code>compare(T,T)</code></td>
+                <td><code>sorted()</code></td>
+                <td>Compares two elements</td>
+              </tr>
+              <tr>
+                <td><code>UnaryOperator&lt;T&gt;</code></td>
+                <td><code>apply(T)</code></td>
+                <td><code>iterate()</code></td>
+                <td>Maps T → T (same type)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>

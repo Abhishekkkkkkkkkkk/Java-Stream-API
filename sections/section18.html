@@ -1,0 +1,437 @@
+<!-- SECTION 18: PRACTICE PROBLEMS -->
+    <div class="sec" id="s18">
+      <div class="sh">
+        <div class="sn">18</div>
+        <div class="sh-t">
+          <h2>Practice Problems</h2>
+          <p>
+            30+ problems from easy to interview-level — with complete Stream
+            solutions
+          </p>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>🟢 Easy Problems</h3>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P1: Sum of Even Numbers</span
+            ><span class="tag tg">Easy</span>
+          </div>
+          <div class="pcb">
+            <p>Given a list of integers, find the sum of all even numbers.</p>
+            <div class="pio">
+              <div class="pi">
+                <label>Input</label><code>[1, 2, 3, 4, 5, 6, 7, 8]</code>
+              </div>
+              <div class="po"><label>Output</label><code>20</code></div>
+            </div>
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="kw">int</span> sum = <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>,<span class="nm">6</span>,<span class="nm">7</span>,<span class="nm">8</span>).<span class="mt">stream</span>()
+    .<span class="mt">filter</span>(n -&gt; n % <span class="nm">2</span> == <span class="nm">0</span>)
+    .<span class="mt">mapToInt</span>(<span class="cs">Integer</span>::intValue)
+    .<span class="mt">sum</span>(); <span class="cm">// 20</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P2: Remove Duplicates and Sort</span
+            ><span class="tag tg">Easy</span>
+          </div>
+          <div class="pcb">
+            <div class="pio">
+              <div class="pi">
+                <label>Input</label
+                ><code>["banana","apple","cherry","apple","banana"]</code>
+              </div>
+              <div class="po">
+                <label>Output</label><code>["apple","banana","cherry"]</code>
+              </div>
+            </div>
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cs">List</span>&lt;<span class="cs">String</span>&gt; result = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"banana"</span>,<span class="st">"apple"</span>,<span class="st">"cherry"</span>,<span class="st">"apple"</span>,<span class="st">"banana"</span>)
+    .<span class="mt">distinct</span>().<span class="mt">sorted</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P3: Word Frequency Count</span
+            ><span class="tag tg">Easy</span>
+          </div>
+          <div class="pcb">
+            <div class="pio">
+              <div class="pi">
+                <label>Input</label
+                ><code>"java is great and java is fast"</code>
+              </div>
+              <div class="po">
+                <label>Output</label
+                ><code>{java=2, is=2, great=1, and=1, fast=1}</code>
+              </div>
+            </div>
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">Long</span>&gt; freq = <span class="cs">Arrays</span>
+    .<span class="mt">stream</span>(<span class="st">"java is great and java is fast"</span>.<span class="mt">split</span>(<span class="st">"\\s+"</span>))
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Function</span>.<span class="mt">identity</span>(), <span class="cs">Collectors</span>.<span class="mt">counting</span>()));</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P4: Sum of Squares of Odd Numbers</span
+            ><span class="tag tg">Easy</span>
+          </div>
+          <div class="pcb">
+            <div class="pio">
+              <div class="pi">
+                <label>Input</label><code>[1, 2, 3, 4, 5]</code>
+              </div>
+              <div class="po">
+                <label>Output</label><code>35 (1+9+25)</code>
+              </div>
+            </div>
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="kw">int</span> sumSq = <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>).<span class="mt">stream</span>()
+    .<span class="mt">filter</span>(n -&gt; n % <span class="nm">2</span> != <span class="nm">0</span>)
+    .<span class="mt">mapToInt</span>(n -&gt; n * n)
+    .<span class="mt">sum</span>(); <span class="cm">// 35</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>🟡 Medium Problems</h3>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt"
+              >P5: Group Employees by Department + Highest Salary Each</span
+            ><span class="tag to">Medium</span>
+          </div>
+          <div class="pcb">
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">Optional</span>&lt;<span class="cs">Employee</span>&gt;&gt; topByDept = employees.<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Employee</span>::dept,
+        <span class="cs">Collectors</span>.<span class="mt">maxBy</span>(<span class="cs">Comparator</span>.<span class="mt">comparingDouble</span>(<span class="cs">Employee</span>::salary))));</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P6: Second Highest Salary</span
+            ><span class="tag to">Medium</span>
+          </div>
+          <div class="pcb">
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cs">Optional</span>&lt;<span class="cs">Double</span>&gt; secondHighest = employees.<span class="mt">stream</span>()
+    .<span class="mt">map</span>(<span class="cs">Employee</span>::salary)
+    .<span class="mt">distinct</span>()
+    .<span class="mt">sorted</span>(<span class="cs">Comparator</span>.<span class="mt">reverseOrder</span>())
+    .<span class="mt">skip</span>(<span class="nm">1</span>)
+    .<span class="mt">findFirst</span>();</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt"
+              >P7: Character Frequency (case-insensitive, no spaces)</span
+            ><span class="tag to">Medium</span>
+          </div>
+          <div class="pcb">
+            <div class="pio">
+              <div class="pi">
+                <label>Input</label><code>"Hello World"</code>
+              </div>
+              <div class="po">
+                <label>Output</label
+                ><code>{h=1, e=1, l=3, o=2, w=1, r=1, d=1}</code>
+              </div>
+            </div>
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cs">Map</span>&lt;<span class="cs">Character</span>,<span class="cs">Long</span>&gt; charFreq = <span class="st">"Hello World"</span>.<span class="mt">toLowerCase</span>()
+    .<span class="mt">chars</span>()
+    .<span class="mt">filter</span>(c -&gt; c != <span class="st">' '</span>)
+    .<span class="mt">mapToObj</span>(c -&gt; (<span class="kw">char</span>)c)
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Function</span>.<span class="mt">identity</span>(), <span class="cs">Collectors</span>.<span class="mt">counting</span>()));</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P8: Find Duplicate Elements</span
+            ><span class="tag to">Medium</span>
+          </div>
+          <div class="pcb">
+            <div class="pio">
+              <div class="pi">
+                <label>Input</label><code>[1, 2, 3, 2, 4, 3, 5]</code>
+              </div>
+              <div class="po"><label>Output</label><code>{2, 3}</code></div>
+            </div>
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cs">Set</span>&lt;<span class="cs">Integer</span>&gt; seen = <span class="kw">new</span> <span class="cs">HashSet</span>&lt;&gt;();
+<span class="cs">Set</span>&lt;<span class="cs">Integer</span>&gt; dupes = <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">2</span>,<span class="nm">4</span>,<span class="nm">3</span>,<span class="nm">5</span>).<span class="mt">stream</span>()
+    .<span class="mt">filter</span>(n -&gt; !seen.<span class="mt">add</span>(n)) <span class="cm">// add() returns false if already present</span>
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toSet</span>()); <span class="cm">// {2, 3}</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P9: Flatten + Distinct + Sorted Nested Lists</span
+            ><span class="tag to">Medium</span>
+          </div>
+          <div class="pcb">
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cs">List</span>&lt;<span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt;&gt; nested = <span class="cs">List</span>.<span class="mt">of</span>(<span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">3</span>,<span class="nm">1</span>,<span class="nm">4</span>), <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">5</span>,<span class="nm">9</span>), <span class="cs">List</span>.<span class="mt">of</span>(<span class="nm">2</span>,<span class="nm">6</span>,<span class="nm">5</span>));
+<span class="cs">List</span>&lt;<span class="cs">Integer</span>&gt; result = nested.<span class="mt">stream</span>()
+    .<span class="mt">flatMap</span>(<span class="cs">Collection</span>::stream)
+    .<span class="mt">distinct</span>().<span class="mt">sorted</span>().<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+<span class="cm">// [1, 2, 3, 4, 5, 6, 9]</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>🔴 Hard / Interview-Level Problems</h3>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P10: Anagram Grouping</span
+            ><span class="tag tr">Hard</span>
+          </div>
+          <div class="pcb">
+            <p>Group a list of strings so that anagrams are together.</p>
+            <div class="pio">
+              <div class="pi">
+                <label>Input</label
+                ><code>["eat","tea","tan","ate","nat","bat"]</code>
+              </div>
+              <div class="po">
+                <label>Output</label
+                ><code>{aet=[eat,tea,ate], ant=[tan,nat], abt=[bat]}</code>
+              </div>
+            </div>
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">List</span>&lt;<span class="cs">String</span>&gt;&gt; anagrams = <span class="cs">List</span>.<span class="mt">of</span>(<span class="st">"eat"</span>,<span class="st">"tea"</span>,<span class="st">"tan"</span>,<span class="st">"ate"</span>,<span class="st">"nat"</span>,<span class="st">"bat"</span>)
+    .<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(w -&gt; {
+        <span class="kw">char</span>[] c = w.<span class="mt">toCharArray</span>();
+        <span class="cs">Arrays</span>.<span class="mt">sort</span>(c);
+        <span class="kw">return</span> <span class="kw">new</span> <span class="cs">String</span>(c); <span class="cm">// sorted chars as canonical key</span>
+    }));</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P11: Top 3 Most Frequent Words</span
+            ><span class="tag tr">Hard</span>
+          </div>
+          <div class="pcb">
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cs">String</span> text = <span class="st">"java streams are powerful java is great streams save time java"</span>;
+
+<span class="cs">List</span>&lt;<span class="cs">String</span>&gt; top3 = <span class="cs">Arrays</span>.<span class="mt">stream</span>(text.<span class="mt">split</span>(<span class="st">"\\s+"</span>))
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Function</span>.<span class="mt">identity</span>(), <span class="cs">Collectors</span>.<span class="mt">counting</span>()))
+    .<span class="mt">entrySet</span>().<span class="mt">stream</span>()
+    .<span class="mt">sorted</span>(<span class="cs">Map.Entry</span>.&lt;<span class="cs">String</span>,<span class="cs">Long</span>&gt;<span class="mt">comparingByValue</span>().<span class="mt">reversed</span>())
+    .<span class="mt">limit</span>(<span class="nm">3</span>)
+    .<span class="mt">map</span>(<span class="cs">Map.Entry</span>::getKey)
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>()); <span class="cm">// [java, streams, ...]</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P12: Transpose a Matrix Using Streams</span
+            ><span class="tag tr">Hard</span>
+          </div>
+          <div class="pcb">
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="kw">int</span>[][] matrix = {{<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>},{<span class="nm">4</span>,<span class="nm">5</span>,<span class="nm">6</span>},{<span class="nm">7</span>,<span class="nm">8</span>,<span class="nm">9</span>}};
+
+<span class="kw">int</span>[][] transposed = <span class="cs">IntStream</span>.<span class="mt">range</span>(<span class="nm">0</span>, matrix[<span class="nm">0</span>].length)
+    .<span class="mt">mapToObj</span>(col -&gt;
+        <span class="cs">IntStream</span>.<span class="mt">range</span>(<span class="nm">0</span>, matrix.length)
+            .<span class="mt">map</span>(row -&gt; matrix[row][col])
+            .<span class="mt">toArray</span>())
+    .<span class="mt">toArray</span>(<span class="kw">int</span>[][]::new);
+<span class="cm">// [[1,4,7],[2,5,8],[3,6,9]]</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P13: Custom Collector — Mean Calculation</span
+            ><span class="tag tr">Hard</span>
+          </div>
+          <div class="pcb">
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java — Custom Collector</span>
+              </div>
+              <pre><span class="cs">Collector</span>&lt;<span class="cs">Integer</span>,<span class="kw">int</span>[],<span class="cs">Double</span>&gt; meanCollector = <span class="cs">Collector</span>.<span class="mt">of</span>(
+    () -&gt; <span class="kw">new</span> <span class="kw">int</span>[<span class="nm">2</span>],            <span class="cm">// supplier: [sum, count]</span>
+    (arr, n) -&gt; { arr[<span class="nm">0</span>]+=n; arr[<span class="nm">1</span>]++; }, <span class="cm">// accumulator</span>
+    (a, b)   -&gt; { a[<span class="nm">0</span>]+=b[<span class="nm">0</span>]; a[<span class="nm">1</span>]+=b[<span class="nm">1</span>]; <span class="kw">return</span> a; }, <span class="cm">// combiner</span>
+    arr -&gt; arr[<span class="nm">1</span>]==<span class="nm">0</span> ? <span class="nm">0.0</span> : (<span class="kw">double</span>)arr[<span class="nm">0</span>]/arr[<span class="nm">1</span>] <span class="cm">// finisher</span>
+);
+
+<span class="kw">double</span> mean = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>).<span class="mt">collect</span>(meanCollector); <span class="cm">// 3.0</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P14: Fibonacci via Stream.iterate()</span
+            ><span class="tag tr">Hard</span>
+          </div>
+          <div class="pcb">
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="cs">List</span>&lt;<span class="cs">Long</span>&gt; fib = <span class="cs">Stream</span>.<span class="mt">iterate</span>(<span class="kw">new</span> <span class="kw">long</span>[]{<span class="nm">0L</span>,<span class="nm">1L</span>},
+        f -&gt; <span class="kw">new</span> <span class="kw">long</span>[]{f[<span class="nm">1</span>], f[<span class="nm">0</span>]+f[<span class="nm">1</span>]})
+    .<span class="mt">limit</span>(<span class="nm">15</span>)
+    .<span class="mt">map</span>(f -&gt; f[<span class="nm">0</span>])
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">toList</span>());
+<span class="cm">// [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377]</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc">
+          <div class="pch">
+            <span class="pt">P15: Most Expensive Product per Category</span
+            ><span class="tag tr">Hard</span>
+          </div>
+          <div class="pcb">
+            <div class="cb">
+              <div class="ch">
+                <div class="dots">
+                  <span class="dr"></span><span class="dy"></span
+                  ><span class="dg"></span>
+                </div>
+                <span class="cl">Java</span>
+              </div>
+              <pre><span class="kw">record</span> <span class="cs">Product</span>(<span class="cs">String</span> name, <span class="cs">String</span> category, <span class="kw">double</span> price) {}
+
+<span class="cs">Map</span>&lt;<span class="cs">String</span>,<span class="cs">Optional</span>&lt;<span class="cs">Product</span>&gt;&gt; priciest = products.<span class="mt">stream</span>()
+    .<span class="mt">collect</span>(<span class="cs">Collectors</span>.<span class="mt">groupingBy</span>(<span class="cs">Product</span>::category,
+        <span class="cs">Collectors</span>.<span class="mt">maxBy</span>(<span class="cs">Comparator</span>.<span class="mt">comparingDouble</span>(<span class="cs">Product</span>::price))));</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

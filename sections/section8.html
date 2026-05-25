@@ -1,0 +1,92 @@
+<!-- SECTION 8: PRIMITIVE STREAMS -->
+    <div class="sec" id="s8">
+      <div class="sh">
+        <div class="sn">8</div>
+        <div class="sh-t">
+          <h2>Primitive Streams</h2>
+          <p>IntStream, LongStream, DoubleStream — avoiding boxing overhead</p>
+        </div>
+      </div>
+
+      <p>
+        <code>Stream&lt;Integer&gt;</code> boxes every <code>int</code> into an
+        <code>Integer</code> heap object — causing object allocation, GC
+        pressure, and cache misses. Primitive streams avoid this entirely.
+      </p>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>Primitive Stream</th>
+              <th>Equivalent Object Stream</th>
+              <th>Extra Methods</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>IntStream</code></td>
+              <td><code>Stream&lt;Integer&gt;</code></td>
+              <td>
+                <code
+                  >sum(), min(), max(), average(), range(), rangeClosed(),
+                  summaryStatistics()</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td><code>LongStream</code></td>
+              <td><code>Stream&lt;Long&gt;</code></td>
+              <td>
+                <code
+                  >sum(), min(), max(), average(), range(), rangeClosed()</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td><code>DoubleStream</code></td>
+              <td><code>Stream&lt;Double&gt;</code></td>
+              <td><code>sum(), min(), max(), average()</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb">
+        <div class="ch">
+          <div class="dots">
+            <span class="dr"></span><span class="dy"></span
+            ><span class="dg"></span>
+          </div>
+          <span class="cl">Java — Primitive Streams</span>
+        </div>
+        <pre><span class="cm">// IntStream — sum 1..100 without boxing!</span>
+<span class="kw">int</span> sum = <span class="cs">IntStream</span>.<span class="mt">rangeClosed</span>(<span class="nm">1</span>,<span class="nm">100</span>).<span class="mt">sum</span>(); <span class="cm">// 5050</span>
+
+<span class="cm">// mapToInt() — convert Stream&lt;T&gt; to IntStream</span>
+<span class="kw">int</span> totalLen = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"Java"</span>,<span class="st">"Streams"</span>,<span class="st">"API"</span>).<span class="mt">mapToInt</span>(<span class="cs">String</span>::length).<span class="mt">sum</span>(); <span class="cm">// 14</span>
+
+<span class="cm">// boxed() — convert IntStream back to Stream&lt;Integer&gt;</span>
+<span class="cs">Stream</span>&lt;<span class="cs">Integer</span>&gt; boxed = <span class="cs">IntStream</span>.<span class="mt">range</span>(<span class="nm">1</span>,<span class="nm">6</span>).<span class="mt">boxed</span>();
+
+<span class="cm">// average() returns OptionalDouble</span>
+<span class="cs">OptionalDouble</span> avg = <span class="cs">IntStream</span>.<span class="mt">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>).<span class="mt">average</span>();
+avg.<span class="mt">ifPresent</span>(<span class="cs">System</span>.out::<span class="mt">println</span>); <span class="cm">// 3.0</span>
+
+<span class="cm">// IntSummaryStatistics — all stats at once</span>
+<span class="cs">IntSummaryStatistics</span> stats = <span class="cs">IntStream</span>.<span class="mt">of</span>(<span class="nm">10</span>,<span class="nm">20</span>,<span class="nm">30</span>).<span class="mt">summaryStatistics</span>();
+stats.<span class="mt">getMax</span>(); <span class="cm">// 30</span>
+stats.<span class="mt">getMin</span>(); <span class="cm">// 10</span>
+stats.<span class="mt">getSum</span>(); <span class="cm">// 60</span>
+stats.<span class="mt">getCount</span>(); <span class="cm">// 3</span>
+stats.<span class="mt">getAverage</span>(); <span class="cm">// 20.0</span>
+
+<span class="cm">// Widen type: asLongStream(), asDoubleStream()</span>
+<span class="cs">LongStream</span>   ls = <span class="cs">IntStream</span>.<span class="mt">range</span>(<span class="nm">1</span>,<span class="nm">5</span>).<span class="mt">asLongStream</span>();
+<span class="cs">DoubleStream</span> ds = <span class="cs">IntStream</span>.<span class="mt">range</span>(<span class="nm">1</span>,<span class="nm">5</span>).<span class="mt">asDoubleStream</span>();
+
+<span class="cm">// Performance: primitive vs boxed sum of 10M elements</span>
+<span class="cm">// LongStream.rangeClosed(1, 10_000_000).sum()  →  ~10ms  ✅</span>
+<span class="cm">// Stream&lt;Long&gt; equivalently                   →  ~80ms  ❌ 8x slower!</span></pre>
+      </div>
+    </div>

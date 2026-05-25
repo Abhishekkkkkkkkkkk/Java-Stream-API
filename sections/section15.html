@@ -1,0 +1,126 @@
+<!-- SECTION 15: BEST PRACTICES -->
+    <div class="sec" id="s15">
+      <div class="sh">
+        <div class="sn">15</div>
+        <div class="sh-t">
+          <h2>Best Practices</h2>
+          <p>Industry-grade guidelines for professional Stream API usage</p>
+        </div>
+      </div>
+
+      <div class="box bb">
+        <div class="bi">⭐</div>
+        <div class="bc">
+          <h4>1. Prefer Method References Over Lambdas When Cleaner</h4>
+          <p>
+            <code>stream.map(String::toUpperCase)</code> beats
+            <code>stream.map(s -&gt; s.toUpperCase())</code>. Use lambdas when
+            the reference form is ambiguous or less readable.
+          </p>
+        </div>
+      </div>
+      <div class="box bb">
+        <div class="bi">⭐</div>
+        <div class="bc">
+          <h4>2. Use Primitive Streams for Numeric Work</h4>
+          <p>
+            Always use <code>IntStream</code>, <code>LongStream</code>,
+            <code>DoubleStream</code> instead of
+            <code>Stream&lt;Integer&gt;</code> etc. for numeric pipelines. Avoid
+            boxing overhead — performance difference can be 5–10x.
+          </p>
+        </div>
+      </div>
+      <div class="box bb">
+        <div class="bi">⭐</div>
+        <div class="bc">
+          <h4>3. Filter Before Map</h4>
+          <p>
+            Apply <code>filter()</code> as early as possible to reduce elements
+            before expensive <code>map()</code>, <code>sorted()</code>, or
+            <code>flatMap()</code> operations.
+          </p>
+        </div>
+      </div>
+      <div class="box bb">
+        <div class="bi">⭐</div>
+        <div class="bc">
+          <h4>4. Use collect() Not forEach() for Building Collections</h4>
+          <p>
+            Never do <code>stream.forEach(list::add)</code>. It's unsafe in
+            parallel and anti-functional. Always use
+            <code>collect(Collectors.toList())</code>.
+          </p>
+        </div>
+      </div>
+      <div class="box bb">
+        <div class="bi">⭐</div>
+        <div class="bc">
+          <h4>5. Avoid Side Effects in Stream Operations</h4>
+          <p>
+            Lambda functions in stream operations should be
+            <strong>stateless and side-effect-free</strong>. Side effects make
+            code unpredictable and break parallel streams.
+          </p>
+        </div>
+      </div>
+      <div class="box bb">
+        <div class="bi">⭐</div>
+        <div class="bc">
+          <h4>6. Close I/O-backed Streams with try-with-resources</h4>
+          <p>
+            Streams from <code>Files.lines()</code>,
+            <code>Files.walk()</code> etc. must be closed. Always use:
+            <code
+              >try (Stream&lt;String&gt; lines = Files.lines(path)) { ...
+              }</code
+            >
+          </p>
+        </div>
+      </div>
+      <div class="box bb">
+        <div class="bi">⭐</div>
+        <div class="bc">
+          <h4>7. Profile Before Parallelizing</h4>
+          <p>
+            Never assume parallel is faster. Benchmark with realistic data. For
+            most operations under 10,000 elements, sequential is faster due to
+            thread management overhead.
+          </p>
+        </div>
+      </div>
+      <div class="box bb">
+        <div class="bi">⭐</div>
+        <div class="bc">
+          <h4>8. Use orElseGet() Over orElse() for Expensive Defaults</h4>
+          <p>
+            <code>orElse(expensive())</code> always evaluates
+            <code>expensive()</code>. Use
+            <code>orElseGet(() -&gt; expensive())</code> so it's only evaluated
+            when the Optional is empty.
+          </p>
+        </div>
+      </div>
+      <div class="box bb">
+        <div class="bi">⭐</div>
+        <div class="bc">
+          <h4>9. Keep Pipelines Readable — Break Long Chains</h4>
+          <p>
+            If a chain exceeds ~4-5 operations, consider extracting intermediate
+            results into named variables or helper methods. Readability beats
+            cleverness.
+          </p>
+        </div>
+      </div>
+      <div class="box bb">
+        <div class="bi">⭐</div>
+        <div class="bc">
+          <h4>10. Use toList() Shorthand in Java 16+</h4>
+          <p>
+            <code>stream.toList()</code> (Java 16) returns an unmodifiable List
+            with less verbosity than <code>collect(Collectors.toList())</code>.
+            Prefer it in modern codebases.
+          </p>
+        </div>
+      </div>
+    </div>
