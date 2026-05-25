@@ -1,77 +1,76 @@
 <!-- SECTION 3: LIFECYCLE -->
-    <div class="sec" id="s3">
-      <div class="sh">
-        <div class="sn">3</div>
-        <div class="sh-t">
-          <h2>Complete Stream Lifecycle</h2>
-          <p>Source → Intermediate Ops → Terminal Op → Result</p>
-        </div>
-      </div>
+<div class="sec" id="s3">
+  <div class="sh">
+    <div class="sn">3</div>
+    <div class="sh-t">
+      <h2>Complete Stream Lifecycle</h2>
+      <p>Source → Intermediate Ops → Terminal Op → Result</p>
+    </div>
+  </div>
 
-      <div class="fd">
-        <div
-          style="
-            margin-bottom: 16px;
-            color: var(--mu);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 700;
-          "
+  <div class="fd">
+    <div
+      style="
+        margin-bottom: 16px;
+        color: var(--mu);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+      "
+    >
+      Stream Lifecycle
+    </div>
+    <div class="fr">
+      <div class="fb fs">
+        ① SOURCE<br /><small>Collection / Array / File / Generator</small>
+      </div>
+      <div class="fa">→</div>
+      <div class="fb fi">
+        ② INTERMEDIATE OPS<br /><small
+          >filter, map, sorted… (Lazy, 0 or more)</small
         >
-          Stream Lifecycle
-        </div>
-        <div class="fr">
-          <div class="fb fs">
-            ① SOURCE<br /><small>Collection / Array / File / Generator</small>
-          </div>
-          <div class="fa">→</div>
-          <div class="fb fi">
-            ② INTERMEDIATE OPS<br /><small
-              >filter, map, sorted… (Lazy, 0 or more)</small
-            >
-          </div>
-          <div class="fa">→</div>
-          <div class="fb ft">
-            ③ TERMINAL OP<br /><small>collect, reduce, forEach… (Eager)</small>
-          </div>
-          <div class="fa">→</div>
-          <div class="fb fres">
-            ④ RESULT<br /><small>Value / Collection / Side Effect</small>
-          </div>
-        </div>
       </div>
+      <div class="fa">→</div>
+      <div class="fb ft">
+        ③ TERMINAL OP<br /><small>collect, reduce, forEach… (Eager)</small>
+      </div>
+      <div class="fa">→</div>
+      <div class="fb fres">
+        ④ RESULT<br /><small>Value / Collection / Side Effect</small>
+      </div>
+    </div>
+  </div>
 
-      <div class="sub">
-        <h3>Key Rules</h3>
-        <ul>
-          <li>
-            <strong>Streams are single-use</strong> — calling a terminal op
-            "closes" the stream. Reusing throws
-            <code>IllegalStateException</code>.
-          </li>
-          <li>
-            <strong>Intermediate ops are lazy</strong> — they build a pipeline
-            but don't execute until terminal op fires.
-          </li>
-          <li>
-            <strong>Terminal ops are eager</strong> — they trigger the whole
-            pipeline.
-          </li>
-          <li>
-            <strong>Chaining</strong> — each intermediate op returns a new
-            stream, enabling method chaining.
-          </li>
-        </ul>
-        <div class="cb">
-          <div class="ch">
-            <div class="dots">
-              <span class="dr"></span><span class="dy"></span
-              ><span class="dg"></span>
-            </div>
-            <span class="cl">Java — Stream Single Use</span>
-          </div>
-          <pre><span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; stream = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>);
+  <div class="sub">
+    <h3>Key Rules</h3>
+    <ul>
+      <li>
+        <strong>Streams are single-use</strong> — calling a terminal op "closes"
+        the stream. Reusing throws <code>IllegalStateException</code>.
+      </li>
+      <li>
+        <strong>Intermediate ops are lazy</strong> — they build a pipeline but
+        don't execute until terminal op fires.
+      </li>
+      <li>
+        <strong>Terminal ops are eager</strong> — they trigger the whole
+        pipeline.
+      </li>
+      <li>
+        <strong>Chaining</strong> — each intermediate op returns a new stream,
+        enabling method chaining.
+      </li>
+    </ul>
+    <div class="cb">
+      <div class="ch">
+        <div class="dots">
+          <span class="dr"></span><span class="dy"></span
+          ><span class="dg"></span>
+        </div>
+        <span class="cl">Java — Stream Single Use</span>
+      </div>
+      <pre><span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt; stream = <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>);
 stream.<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>); <span class="cm">// ✅ Works</span>
 stream.<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>); <span class="cm">// ❌ IllegalStateException!</span>
 
@@ -79,42 +78,42 @@ stream.<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span
 <span class="cs">Supplier</span>&lt;<span class="cs">Stream</span>&lt;<span class="cs">String</span>&gt;&gt; sup = () -&gt; <span class="cs">Stream</span>.<span class="mt">of</span>(<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>);
 sup.<span class="mt">get</span>().<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>); <span class="cm">// ✅</span>
 sup.<span class="mt">get</span>().<span class="mt">forEach</span>(<span class="cs">System</span>.out::<span class="mt">println</span>); <span class="cm">// ✅</span></pre>
-        </div>
-      </div>
-
-      <div class="sub">
-        <h3>Stateless vs Stateful Operations</h3>
-        <div class="tw">
-          <table>
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Operations</th>
-                <th>Behavior</th>
-                <th>Parallel Safety</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="tag tg">Stateless</span></td>
-                <td>
-                  <code>filter</code>, <code>map</code>, <code>flatMap</code>,
-                  <code>peek</code>, <code>mapToInt</code>
-                </td>
-                <td>Each element processed independently</td>
-                <td>✅ Fully parallel-safe</td>
-              </tr>
-              <tr>
-                <td><span class="tag to">Stateful</span></td>
-                <td>
-                  <code>sorted</code>, <code>distinct</code>,
-                  <code>limit</code>, <code>skip</code>
-                </td>
-                <td>Must see multiple/all elements first</td>
-                <td>⚠️ Limited parallelism</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
+  </div>
+
+  <div class="sub">
+    <h3>Stateless vs Stateful Operations</h3>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Operations</th>
+            <th>Behavior</th>
+            <th>Parallel Safety</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tg">Stateless</span></td>
+            <td>
+              <code>filter</code>, <code>map</code>, <code>flatMap</code>,
+              <code>peek</code>, <code>mapToInt</code>
+            </td>
+            <td>Each element processed independently</td>
+            <td>✅ Fully parallel-safe</td>
+          </tr>
+          <tr>
+            <td><span class="tag to">Stateful</span></td>
+            <td>
+              <code>sorted</code>, <code>distinct</code>, <code>limit</code>,
+              <code>skip</code>
+            </td>
+            <td>Must see multiple/all elements first</td>
+            <td>⚠️ Limited parallelism</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
